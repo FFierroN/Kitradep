@@ -1,0 +1,62 @@
+Guion del Chatbot de WhatsApp
+Fase 1: menu, preguntas frecuentes (FAQ) y agendar citas.
+
+Como usar este documento: todo lo que aparece EN NEGRITA AZUL es lo que TU debes cambiar por tu propio texto. El resto es la estructura, dejala tal cual. Cuando termines, me devuelves el documento y yo lo conecto al chatbot.
+Variables magicas: puedes escribir {nombre}  {servicio}  {dia}  {hora}  dentro de cualquier mensaje. El bot las reemplaza solo por los datos reales de la persona.
+1. Configuracion general
+Nombre del bot: Asistente de Kitradep
+Tono de la conversacion: cercano
+2. Menu principal (lo primero que ve la persona)
+Saludo + que puede hacer el bot: Ej: Hola! Soy {nombre_bot}, te ayudo con dudas y a agendar tu hora.
+Texto de cada opcion del menu:
+Opcion 1: Ej: Preguntas frecuentes
+Opcion 2: Ej: Agendar una cita
+Opcion 3: Ej: Informacion de contacto
+Opcion 4: Ej: Hablar con un kinesiólogo 
+Opcion 0: Ej: Salir
+3. Preguntas frecuentes (FAQ)
+Intro del menu de FAQ: Ej: Claro! Estas son las dudas mas comunes:
+Titulos que aparecen en el submenu:
+Titulo pregunta 1: Ej: Cuales son los horarios?
+Titulo pregunta 2: Ej: Donde estan ubicados?
+Titulo pregunta 3: Ej: Que servicios ofrecen?
+Titulo pregunta 4: Ej: Cuanto cuestan?
+Respuestas de cada pregunta:
+Respuesta HORARIOS: Nuestros horarios son:
+🗓️ Lunes a viernes: 8:00 a 21:00 hrs
+🗓️ Sábados: 9:00 a 13:00 hrs
+Respuesta UBICACION: 📍Nuestra consulta está ubicada en Llano Subercaseaux 3791, segundo piso. Oficina 208-209. 
+Llano Subercaseaux 3791, 8910228 San Miguel
+Esto queda a la salida poniente de metro San Miguel.  
+https://maps.app.goo.gl/U7ByTKYjp2sDqNTq7?g_st=ic
+Respuesta SERVICIOS: kinesióloga con valor preferencial Fonasa, kinesióloga Isapre y particular 
+Respuesta PRECIOS:  sesión Fonasa $20.000 cada sesión. Isapre $25.000 cada sesión 4. 
+
+5. Agendar cita (flujo paso a paso)
+Paso 1 - Preguntar el servicio:
+Mensaje: Ej: Perfecto! Que servicio quieres agendar?
+Servicio opcion 1: kinesiología Fonasa 
+Servicio opcion 2: kinesióloga Isapre 
+Servicio opcion 3: Otro
+Paso 2 - Preguntar el dia:
+Mensaje: Ej: Genial! Para que dia te gustaria?
+Paso 3 - Preguntar la hora:
+Mensaje: Ej: A que hora te acomoda?
+Paso 4 - Preguntar el nombre:
+Mensaje: Ej: ayúdanos con la siguiente información del paciente:
+📝 Nombre:
+🆔 RUT:
+📧 Correo electrónico:
+📞 Número de contacto:
+🏥 Previsión de salud (Fonasa, Isapre, Particular):
+🏠 Dirección:
+Paso 5 - Confirmacion (usa las variables):
+Mensaje: Ej: Perfecto {nombre}! Confirmo: {servicio} el {dia} a las {hora}. Correcto?
+Mensaje final cuando la cita queda lista:
+Mensaje: Ej: Listo {nombre}! Tu cita quedo agendada el {dia} a las {hora}. Te esperamos!
+6. Mensajes especiales
+Derivar a una persona (humano): Ej: Claro, te derivo con un kinesiólogo el equipo. En estos momentos se encuentran con atención de pacientes, pero en un momento te contactan.
+Despedida: Ej: Gracias por escribir! Que tengas un excelente dia.
+Cuando NO entiende lo escrito: Ej: Ups, no te entendi bien. Puedes elegir una opcion del menu?
+
+Fin. Cambia todo lo que este en negrita azul y devuelveme el documento.

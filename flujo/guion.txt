@@ -1,0 +1,211 @@
+# ============================================================================
+#  GUION DEL CHATBOT - Fase 1
+#  Aqui SOLO llenas los textos que vera la persona. La logica va aparte.
+#
+#  COMO LLENAR:
+#   - Reemplaza todo lo que diga <ASI> por tu texto.
+#   - No borres las palabras clave de la estructura (mensaje, opciones, ir_a...).
+#   - En "detecta" pones las palabras/numeros que activan esa opcion.
+#   - Puedes usar {variables} dentro de los mensajes: {nombre}, {servicio},
+#     {dia}, {hora}. El bot las reemplaza solo.
+#   - El simbolo | permite escribir varias lineas de texto debajo.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# CONFIGURACION GENERAL (personalidad y toque humano)
+# ----------------------------------------------------------------------------
+config:
+  nombre_bot: "<NOMBRE DE TU BOT, ej: Asistente de Peluqueria Luna>"
+  # Cuanto "espera" antes de responder para simular que escribe (segundos).
+  delay_min: 1.0
+  delay_max: 2.5
+  # Emoji o estilo permitido? (solo referencia para ti al escribir el copy)
+  tono: "<ej: cercano, formal, juvenil>"
+
+# ----------------------------------------------------------------------------
+# ESTADO INICIAL: por aqui empieza siempre la conversacion
+# ----------------------------------------------------------------------------
+inicio: "inicio"
+
+# ----------------------------------------------------------------------------
+# ESTADOS
+# ----------------------------------------------------------------------------
+estados:
+
+  # === MENU PRINCIPAL =======================================================
+  inicio:
+    tipo: menu
+    mensaje: |
+      <SALUDO. Ej: Hola! Soy {nombre_bot}. Estoy aqui para ayudarte.>
+      <Explica brevemente que puede hacer.>
+
+      Que necesitas hoy?
+      1. <Ej: Preguntas frecuentes>
+      2. <Ej: Agendar una cita>
+      3. <Ej: Ver informacion de contacto>
+      4. <Ej: Hablar con una persona>
+      0. <Ej: Salir>
+    opciones:
+      - detecta: ["1", "preguntas", "faq", "dudas"]
+        ir_a: faq_menu
+      - detecta: ["2", "agendar", "cita", "reservar", "hora"]
+        ir_a: cita_servicio
+      - detecta: ["3", "info", "contacto", "informacion"]
+        ir_a: info_contacto
+      - detecta: ["4", "humano", "persona", "asesor", "ayuda"]
+        ir_a: humano
+      - detecta: ["0", "salir", "chao", "adios"]
+        ir_a: despedida
+
+  # === SUBMENU DE FAQ =======================================================
+  faq_menu:
+    tipo: menu
+    mensaje: |
+      <Ej: Claro! Estas son las preguntas mas comunes:>
+      1. <Ej: Cuales son los horarios?>
+      2. <Ej: Donde estan ubicados?>
+      3. <Ej: Que servicios ofrecen?>
+      4. <Ej: Cuanto cuestan?>
+      9. <Ej: Volver al menu principal>
+    opciones:
+      - detecta: ["1", "horario", "horarios", "hora", "abren"]
+        ir_a: faq_horarios
+      - detecta: ["2", "ubicacion", "direccion", "donde"]
+        ir_a: faq_ubicacion
+      - detecta: ["3", "servicios", "servicio", "hacen"]
+        ir_a: faq_servicios
+      - detecta: ["4", "precio", "precios", "cuesta", "valor"]
+        ir_a: faq_precios
+      - detecta: ["9", "volver", "menu", "atras"]
+        ir_a: inicio
+
+  faq_horarios:
+    tipo: mensaje
+    mensaje: |
+      <TU RESPUESTA sobre horarios. Ej: Atendemos de lunes a viernes de 9 a 18h.>
+    # Despues de mostrar el mensaje, a donde vuelve:
+    ir_a: faq_menu
+
+  faq_ubicacion:
+    tipo: mensaje
+    mensaje: |
+      <TU RESPUESTA sobre ubicacion. Ej: Estamos en Av. Siempreviva 123, Santiago.>
+    ir_a: faq_menu
+
+  faq_servicios:
+    tipo: mensaje
+    mensaje: |
+      <TU RESPUESTA sobre servicios. Ej: Ofrecemos corte, color, peinado...>
+    ir_a: faq_menu
+
+  faq_precios:
+    tipo: mensaje
+    mensaje: |
+      <TU RESPUESTA sobre precios. Ej: Corte desde $10.000, color desde $25.000.>
+    ir_a: faq_menu
+
+  # === INFO / CONTACTO ======================================================
+  info_contacto:
+    tipo: mensaje
+    mensaje: |
+      <DATOS DE CONTACTO. Ej: Telefono, correo, redes sociales, web.>
+    ir_a: inicio
+
+  # === FLUJO DE AGENDAR CITA ================================================
+  # Paso 1: elegir servicio (menu). Guarda la eleccion en {servicio}.
+  cita_servicio:
+    tipo: menu
+    guardar_en: servicio      # lo que elija se guarda en la variable servicio
+    mensaje: |
+      <Ej: Perfecto, agendemos tu cita! Que servicio quieres?>
+      1. <Ej: Corte de pelo>
+      2. <Ej: Color>
+      3. <Ej: Peinado>
+      9. <Ej: Cancelar>
+    opciones:
+      - detecta: ["1", "corte"]
+        valor: "<Ej: Corte de pelo>"   # lo que se guarda en {servicio}
+        ir_a: cita_dia
+      - detecta: ["2", "color"]
+        valor: "<Ej: Color>"
+        ir_a: cita_dia
+      - detecta: ["3", "peinado"]
+        valor: "<Ej: Peinado>"
+        ir_a: cita_dia
+      - detecta: ["9", "cancelar", "volver"]
+        ir_a: inicio
+
+  # Paso 2: elegir dia (entrada de texto libre). Guarda en {dia}.
+  cita_dia:
+    tipo: entrada
+    guardar_en: dia
+    mensaje: |
+      <Ej: Genial! Para que dia te gustaria? (ej: lunes 15, manana...)>
+    ir_a: cita_hora
+
+  # Paso 3: elegir hora (entrada libre). Guarda en {hora}.
+  cita_hora:
+    tipo: entrada
+    guardar_en: hora
+    mensaje: |
+      <Ej: A que hora te acomoda?>
+    ir_a: cita_nombre
+
+  # Paso 4: pedir nombre (entrada libre). Guarda en {nombre}.
+  cita_nombre:
+    tipo: entrada
+    guardar_en: nombre
+    mensaje: |
+      <Ej: Y por ultimo, a nombre de quien reservamos?>
+    ir_a: cita_confirmar
+
+  # Paso 5: confirmar (menu si/no). Usa las variables recolectadas.
+  cita_confirmar:
+    tipo: menu
+    mensaje: |
+      <Ej: Perfecto {nombre}! Confirmo tu cita:>
+      - Servicio: {servicio}
+      - Dia: {dia}
+      - Hora: {hora}
+
+      <Ej: Esta todo correcto?>
+      1. <Ej: Si, confirmar>
+      2. <Ej: No, empezar de nuevo>
+    opciones:
+      - detecta: ["1", "si", "confirmar", "correcto", "ok"]
+        ir_a: cita_ok
+      - detecta: ["2", "no", "cancelar", "cambiar"]
+        ir_a: inicio
+
+  cita_ok:
+    tipo: mensaje
+    mensaje: |
+      <Ej: Listo {nombre}! Tu cita quedo agendada para el {dia} a las {hora}.>
+      <Ej: Te esperamos. Si necesitas algo mas, escribeme cuando quieras!>
+    ir_a: inicio
+
+  # === HABLAR CON HUMANO ====================================================
+  humano:
+    tipo: mensaje
+    mensaje: |
+      <Ej: Claro, te derivo con una persona del equipo. En breve te contactan.>
+      <Ej: Mientras tanto, puedes seguir escribiendome si quieres.>
+    ir_a: inicio
+
+  # === DESPEDIDA ============================================================
+  despedida:
+    tipo: mensaje
+    mensaje: |
+      <Ej: Gracias por escribir! Que tengas un excelente dia.>
+    ir_a: fin   # "fin" cierra la conversacion
+
+# ----------------------------------------------------------------------------
+# MENSAJES GLOBALES (respuestas para situaciones especiales)
+# ----------------------------------------------------------------------------
+globales:
+  # Cuando el usuario escribe algo que no coincide con ninguna opcion.
+  no_entiendo: |
+    <Ej: Ups, no entendi bien eso. Puedes elegir una de las opciones del menu?>
+  # Mensaje al reiniciar/volver a empezar.
+  reinicio: |
+    <Ej: Volvamos a empezar!>

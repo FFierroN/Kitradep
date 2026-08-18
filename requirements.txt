@@ -1,0 +1,23 @@
+# Dependencias del bot KitraDep
+# Instalar con:
+#   uv pip install -r requirements.txt
+#
+# O si preferis pip clasico:
+#   pip install -r requirements.txt
+
+# Framework web
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+jinja2>=3.1.4
+python-multipart>=0.0.12
+
+# Parser YAML del guion
+pyyaml>=6.0.2
+
+# Generacion del PDF de propuesta (opcional, solo si regeneras el PDF)
+reportlab>=4.2.0
+
+# --- Fase B en adelante (LLM hibrido) ---
+# Descomentar cuando arranquemos la integracion Gemini:
+# google-generativeai>=0.8.0
+# python-dotenv>=1.0.0

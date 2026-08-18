@@ -1,0 +1,122 @@
+============================================================================
+ GUION DEL CHATBOT - Fase 1  (PLANILLA PARA LLENAR)
+============================================================================
+
+Esta es la version FACIL de llenar: solo escribe tu texto en la linea que
+dice "TU TEXTO:". No te preocupes por sangrias ni comillas.
+Cuando termines, me lo pasas y yo lo convierto al formato que usa el motor.
+
+Puedes usar estas variables dentro de los mensajes (el bot las rellena solo):
+   {nombre}   {servicio}   {dia}   {hora}
+
+============================================================================
+ CONFIGURACION
+============================================================================
+
+Nombre del bot:
+   TU TEXTO: ____________________________________________
+
+Tono (cercano / formal / juvenil):
+   TU TEXTO: ____________________________________________
+
+
+============================================================================
+ 1) MENU PRINCIPAL  (lo primero que ve la persona)
+============================================================================
+
+Saludo + explicacion breve de que puede hacer:
+   TU TEXTO:
+   ____________________________________________
+   ____________________________________________
+
+Texto de cada opcion del menu:
+   Opcion 1 (Preguntas frecuentes): ____________________________________________
+   Opcion 2 (Agendar una cita):     ____________________________________________
+   Opcion 3 (Informacion/contacto): ____________________________________________
+   Opcion 4 (Hablar con persona):   ____________________________________________
+   Opcion 0 (Salir):                ____________________________________________
+
+
+============================================================================
+ 2) PREGUNTAS FRECUENTES (FAQ)
+============================================================================
+
+Intro del menu de FAQ (ej: "Estas son las dudas mas comunes:"):
+   TU TEXTO: ____________________________________________
+
+Titulos de cada pregunta (lo que aparece en el submenu):
+   FAQ 1: ____________________________________________
+   FAQ 2: ____________________________________________
+   FAQ 3: ____________________________________________
+   FAQ 4: ____________________________________________
+
+Respuestas:
+   Respuesta a HORARIOS:
+   TU TEXTO: ____________________________________________
+
+   Respuesta a UBICACION:
+   TU TEXTO: ____________________________________________
+
+   Respuesta a SERVICIOS:
+   TU TEXTO: ____________________________________________
+
+   Respuesta a PRECIOS:
+   TU TEXTO: ____________________________________________
+
+
+============================================================================
+ 3) INFORMACION / CONTACTO
+============================================================================
+
+Datos de contacto (telefono, correo, redes, web):
+   TU TEXTO:
+   ____________________________________________
+   ____________________________________________
+
+
+============================================================================
+ 4) AGENDAR CITA  (flujo paso a paso)
+============================================================================
+
+Paso 1 - Pregunta que servicio quiere:
+   TU TEXTO: ____________________________________________
+   Servicio opcion 1: ____________________________________________
+   Servicio opcion 2: ____________________________________________
+   Servicio opcion 3: ____________________________________________
+
+Paso 2 - Pregunta el DIA:
+   TU TEXTO: ____________________________________________
+
+Paso 3 - Pregunta la HORA:
+   TU TEXTO: ____________________________________________
+
+Paso 4 - Pregunta el NOMBRE:
+   TU TEXTO: ____________________________________________
+
+Paso 5 - Confirmacion (usa {nombre} {servicio} {dia} {hora}):
+   TU TEXTO:
+   ____________________________________________
+   ____________________________________________
+
+Mensaje final cuando la cita queda lista:
+   TU TEXTO:
+   ____________________________________________
+
+
+============================================================================
+ 5) MENSAJES ESPECIALES
+============================================================================
+
+Hablar con una persona (derivar a humano):
+   TU TEXTO: ____________________________________________
+
+Despedida:
+   TU TEXTO: ____________________________________________
+
+Cuando NO entiende lo que escribieron:
+   TU TEXTO: ____________________________________________
+
+
+============================================================================
+ FIN. Rellena las lineas "TU TEXTO:" y me lo devuelves.
+============================================================================

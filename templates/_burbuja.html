@@ -1,0 +1,14 @@
+{# Renderiza UNA burbuja. Espera variable `m` con {autor, html}. #}
+{% if m.autor == "bot" %}
+  <div class="flex justify-start">
+    <div class="relative bubble bubble-bot bg-white text-gray-800 rounded-lg rounded-tl-none px-3 py-2 max-w-[80%] shadow text-sm leading-snug whitespace-pre-line">
+      {{ m.html | safe }}
+    </div>
+  </div>
+{% else %}
+  <div class="flex justify-end">
+    <div class="relative bubble bubble-user bg-[#d9fdd3] text-gray-800 rounded-lg rounded-tr-none px-3 py-2 max-w-[80%] shadow text-sm leading-snug whitespace-pre-line">
+      {{ m.html | safe }}
+    </div>
+  </div>
+{% endif %}

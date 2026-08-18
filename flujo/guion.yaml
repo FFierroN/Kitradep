@@ -1,0 +1,430 @@
+# ============================================================================
+#  GUION DEL CHATBOT - KitraDep (Fase 1)
+#
+#  Fuentes:
+#   - guion_planilla.docx  (copy de Felipe, 29/07/2026)
+#   - casos_reales.md      (2 chats WhatsApp reales: ISAPRE + FONASA)
+#
+#  LOGICA CLAVE:
+#   El servicio es UNO SOLO (kinesiologia 1-a-1). Lo que bifurca el flujo
+#   es la PREVISION del paciente:
+#     - FONASA     -> valores preferenciales + aclaracion "no somos adheridos"
+#     - ISAPRE     -> valores regulares + mencion de boleta para reembolso
+#     - PARTICULAR -> mismos valores que Isapre
+#
+#  Variables recolectadas: {prevision}, {plan}, {horario_pref}, {datos}
+# ============================================================================
+
+config:
+  nombre_bot: "Asistente de KitraDep"
+  tono: "cercano"
+  delay_min: 1.0
+  delay_max: 2.5
+
+inicio: "inicio"
+
+estados:
+
+  # ==========================================================================
+  # MENU PRINCIPAL
+  # ==========================================================================
+  inicio:
+    tipo: menu
+    mensaje: |
+      Hola! Soy el {nombre_bot}. Te ayudo con dudas y a agendar tu hora
+      de kinesiologia.
+
+      Que necesitas hoy?
+        1. Preguntas frecuentes
+        2. Agendar una cita
+        3. Informacion de contacto
+        4. Hablar con un kinesiologo
+        0. Salir
+    opciones:
+      - detecta: ["1", "preguntas", "faq", "dudas", "consulta"]
+        ir_a: faq_menu
+      - detecta: ["2", "agendar", "cita", "reservar", "hora", "sesion"]
+        ir_a: agendar_orden
+      - detecta: ["3", "info", "contacto", "informacion", "donde"]
+        ir_a: info_contacto
+      - detecta: ["4", "humano", "kinesiologo", "kine", "persona", "asesor"]
+        ir_a: humano
+      - detecta: ["0", "salir", "chao", "adios", "gracias"]
+        ir_a: despedida
+
+  # ==========================================================================
+  # FAQ
+  # ==========================================================================
+  faq_menu:
+    tipo: menu
+    mensaje: |
+      Claro! Estas son las dudas mas comunes:
+        1. Cuales son los horarios?
+        2. Donde estan ubicados?
+        3. Que servicios ofrecen?
+        4. Cuanto cuestan?
+        9. Volver al menu principal
+    opciones:
+      - detecta: ["1", "horario", "horarios", "abren"]
+        ir_a: faq_horarios
+      - detecta: ["2", "ubicacion", "direccion", "donde"]
+        ir_a: faq_ubicacion
+      - detecta: ["3", "servicios", "servicio", "hacen", "ofrecen"]
+        ir_a: faq_servicios
+      - detecta: ["4", "precio", "precios", "cuesta", "valor", "valores"]
+        ir_a: faq_precios_prevision
+      - detecta: ["9", "volver", "menu", "atras"]
+        ir_a: inicio
+
+  faq_horarios:
+    tipo: mensaje
+    mensaje: |
+      Nuestros horarios son:
+        - Lunes a viernes: 8:00 a 21:00 hrs
+        - Sabados: 9:00 a 13:00 hrs
+    ir_a: faq_menu
+
+  faq_ubicacion:
+    tipo: mensaje
+    mensaje: |
+      Nuestra consulta esta ubicada en Llano Subercaseaux 3791,
+      segundo piso, oficina 208-209 (San Miguel, 8910228).
+
+      Queda a la salida poniente de metro San Miguel.
+
+      Como llegar: https://maps.app.goo.gl/U7ByTKYjp2sDqNTq7?g_st=ic
+    ir_a: faq_menu
+
+  faq_servicios:
+    tipo: mensaje
+    mensaje: |
+      Ofrecemos kinesiologia 100% personalizada (un kine por paciente,
+      sesiones de 45-50 min):
+
+        - Kinesiologa con valor preferencial FONASA
+        - Kinesiologa ISAPRE / Particular
+
+      La primera sesion siempre es una evaluacion inicial donde nos
+      cuentas tu historia.
+    ir_a: faq_menu
+
+  # Para precios preguntamos prevision antes de mostrar valores,
+  # igual que en las conversaciones reales.
+  faq_precios_prevision:
+    tipo: menu
+    guardar_en: prevision
+    mensaje: |
+      Los valores dependen de tu prevision de salud. Cual es la tuya?
+        1. FONASA
+        2. ISAPRE / Particular
+        9. Volver
+    opciones:
+      - detecta: ["1", "fonasa"]
+        valor: "Fonasa"
+        ir_a: valores_fonasa
+      - detecta: ["2", "isapre", "particular"]
+        valor: "Isapre"
+        ir_a: valores_isapre
+      - detecta: ["9", "volver", "menu", "atras"]
+        ir_a: faq_menu
+
+  valores_fonasa:
+    tipo: mensaje
+    mensaje: |
+      *Valores preferenciales FONASA*
+
+      Aunque *no somos un centro adherido a FONASA*, si entregamos un
+      *valor preferencial* para pacientes FONASA:
+
+        - 1 sesion: *$20.000* (valor general $25.000)
+        - Pack 5 sesiones: *$100.000* (valor general $115.000)
+        - Pack 10 sesiones: *$180.000* (valor general $230.000)
+
+      Este valor preferencial es un apoyo que entregamos para que puedas
+      acceder a rehabilitacion de calidad y personalizada.
+    ir_a: faq_menu
+
+  valores_isapre:
+    tipo: mensaje
+    mensaje: |
+      *Valores ISAPRE / Particular*
+
+      Trabajamos de manera particular, con sesiones 100% personalizadas
+      (un paciente por kinesiologo):
+
+        - 1 sesion: *$25.000*
+        - Pack 5 sesiones: *$115.000*
+        - Pack 10 sesiones: *$230.000*
+
+      Entregamos boleta para que puedas gestionar tu reembolso con
+      la Isapre.
+    ir_a: faq_menu
+
+  # ==========================================================================
+  # INFO / CONTACTO
+  # ==========================================================================
+  info_contacto:
+    tipo: mensaje
+    mensaje: |
+      *KitraDep - Kine Trauma Deportivo*
+      Llano Subercaseaux 3791, oficina 208-209, San Miguel
+      Salida poniente metro San Miguel
+
+      Horarios:
+        - Lunes a viernes: 8:00 - 21:00 hrs
+        - Sabados: 9:00 - 13:00 hrs
+
+      Web:            https://kinetraumadeportivo.com/kinesiologia-en-san-miguel/
+      Agenda online:  https://encuadrado.com/centro/kitradep
+      Ubicacion:      https://maps.app.goo.gl/U7ByTKYjp2sDqNTq7?g_st=ic
+    ir_a: inicio
+
+  # ==========================================================================
+  # FLUJO DE AGENDAR CITA
+  # (siguiendo el patron de los casos reales de WhatsApp)
+  # ==========================================================================
+
+  # Paso 0 - Preguntar si tiene orden medica (informativo, no bloqueante)
+  agendar_orden:
+    tipo: menu
+    mensaje: |
+      Perfecto, agendemos tu sesion!
+
+      Antes de partir: *dispones de una orden o derivacion medica a
+      kinesiologia?*
+        1. Si, tengo orden
+        2. No tengo orden
+        9. Cancelar
+    opciones:
+      - detecta: ["1", "si", "tengo", "orden"]
+        ir_a: agendar_orden_si
+      - detecta: ["2", "no"]
+        ir_a: agendar_explicacion
+      - detecta: ["9", "cancelar", "volver"]
+        ir_a: inicio
+
+  agendar_orden_si:
+    tipo: mensaje
+    mensaje: |
+      Genial! Cuando un kine te contacte para confirmar, por favor
+      envia una foto de tu orden por este mismo chat asi revisamos las
+      indicaciones del medico.
+
+      Sigamos con el agendamiento.
+    ir_a: agendar_explicacion
+
+  # Paso 1 - Explicacion obligatoria del servicio
+  agendar_explicacion:
+    tipo: mensaje
+    mensaje: |
+      Te cuento como trabajamos: nuestras atenciones son *100%
+      personalizadas* (un kine trabaja con un solo paciente por sesion).
+      Las sesiones duran aproximadamente 45-50 min.
+
+      En la *primera sesion* hacemos una evaluacion inicial donde nos
+      cuentas tu historia.
+    ir_a: agendar_prevision
+
+  # Paso 2 - Bifurcacion clave: prevision
+  agendar_prevision:
+    tipo: menu
+    guardar_en: prevision
+    mensaje: |
+      Cual es tu prevision de salud?
+        1. FONASA
+        2. ISAPRE
+        3. Particular
+        9. Cancelar
+    opciones:
+      - detecta: ["1", "fonasa"]
+        valor: "Fonasa"
+        ir_a: agendar_valores_fonasa
+      - detecta: ["2", "isapre"]
+        valor: "Isapre"
+        ir_a: agendar_valores_isapre
+      - detecta: ["3", "particular"]
+        valor: "Particular"
+        ir_a: agendar_valores_isapre     # mismos valores que Isapre
+      - detecta: ["9", "cancelar", "volver"]
+        ir_a: inicio
+
+  # Paso 3a - Mostrar valores FONASA y pedir plan
+  agendar_valores_fonasa:
+    tipo: menu
+    guardar_en: plan
+    mensaje: |
+      *Valores preferenciales FONASA*
+      (aclaracion: no somos centro adherido a FONASA, entregamos valor
+      preferencial como apoyo)
+
+        - 1 sesion: *$20.000*
+        - Pack 5 sesiones: *$100.000*
+        - Pack 10 sesiones: *$180.000*
+
+      Que modalidad te acomoda?
+        1. Una sesion ($20.000)
+        2. Pack de 5 sesiones ($100.000)
+        3. Pack de 10 sesiones ($180.000)
+        9. Cancelar
+    opciones:
+      - detecta: ["1", "una", "1 sesion"]
+        valor: "1 sesion Fonasa ($20.000)"
+        ir_a: agendar_horario_pref
+      - detecta: ["2", "5", "cinco", "pack 5"]
+        valor: "Pack 5 sesiones Fonasa ($100.000)"
+        ir_a: agendar_horario_pref
+      - detecta: ["3", "10", "diez", "pack 10"]
+        valor: "Pack 10 sesiones Fonasa ($180.000)"
+        ir_a: agendar_horario_pref
+      - detecta: ["9", "cancelar", "volver"]
+        ir_a: inicio
+
+  # Paso 3b - Mostrar valores ISAPRE / Particular y pedir plan
+  agendar_valores_isapre:
+    tipo: menu
+    guardar_en: plan
+    mensaje: |
+      *Valores ISAPRE / Particular*
+      Sesiones 100% personalizadas. Entregamos boleta para reembolso.
+
+        - 1 sesion: *$25.000*
+        - Pack 5 sesiones: *$115.000*
+        - Pack 10 sesiones: *$230.000*
+
+      Que modalidad te acomoda?
+        1. Una sesion ($25.000)
+        2. Pack de 5 sesiones ($115.000)
+        3. Pack de 10 sesiones ($230.000)
+        9. Cancelar
+    opciones:
+      - detecta: ["1", "una", "1 sesion"]
+        valor: "1 sesion Isapre/Particular ($25.000)"
+        ir_a: agendar_horario_pref
+      - detecta: ["2", "5", "cinco", "pack 5"]
+        valor: "Pack 5 sesiones Isapre/Particular ($115.000)"
+        ir_a: agendar_horario_pref
+      - detecta: ["3", "10", "diez", "pack 10"]
+        valor: "Pack 10 sesiones Isapre/Particular ($230.000)"
+        ir_a: agendar_horario_pref
+      - detecta: ["9", "cancelar", "volver"]
+        ir_a: inicio
+
+  # Paso 4 - Preferencia de horario (AM / PM)
+  agendar_horario_pref:
+    tipo: menu
+    guardar_en: horario_pref
+    mensaje: |
+      Que horario te acomoda mejor?
+        1. Manana (AM) - te atenderian Javiera o Jaime
+        2. Tarde  (PM) - te atenderian Francisco o Valentina
+        3. Me da lo mismo
+    opciones:
+      - detecta: ["1", "am", "manana"]
+        valor: "AM"
+        ir_a: agendar_datos
+      - detecta: ["2", "pm", "tarde"]
+        valor: "PM"
+        ir_a: agendar_datos
+      - detecta: ["3", "cualquiera", "lo mismo", "da igual"]
+        valor: "Cualquiera"
+        ir_a: agendar_datos
+
+  # Paso 5 - Recolectar datos completos (un solo mensaje, como en los chats reales)
+  agendar_datos:
+    tipo: entrada
+    guardar_en: datos
+    mensaje: |
+      Para agendar necesitamos los siguientes datos del paciente.
+      Por favor, respondenos en un solo mensaje con todo:
+
+        Nombre completo:
+        RUT:
+        Correo electronico:
+        Numero de contacto:
+        Prevision (Fonasa / Isapre / Particular):
+        Direccion:
+    ir_a: agendar_confirmar
+
+  # Paso 6 - Confirmar resumen
+  agendar_confirmar:
+    tipo: menu
+    mensaje: |
+      Perfecto! Te confirmo el resumen de tu solicitud:
+
+        - Prevision:         {prevision}
+        - Modalidad:         {plan}
+        - Horario preferido: {horario_pref}
+        - Datos:
+      {datos}
+
+      Todo correcto?
+        1. Si, confirmar solicitud
+        2. No, empezar de nuevo
+    opciones:
+      - detecta: ["1", "si", "confirmar", "correcto", "ok"]
+        ir_a: agendar_ok
+      - detecta: ["2", "no", "cancelar", "cambiar"]
+        ir_a: inicio
+
+  # Paso 7 - Cierre y traspaso a humano para confirmar slot
+  agendar_ok:
+    tipo: mensaje
+    mensaje: |
+      Listo! Recibimos tu solicitud.
+
+      *Un kinesiologo te contactara pronto por este chat para confirmar
+      el dia y hora exactos* segun disponibilidad.
+
+      Mientras tanto, tips utiles:
+        - Ven con ropa comoda (te puedes cambiar aca si lo necesitas).
+        - El edificio tiene bicicletero (consultar al conserje, lleva
+          candado).
+        - Puedes pagar sesion a sesion o el pack completo, presencial
+          en la consulta.
+
+      Direccion:  Llano Subercaseaux 3791, oficina 208-209, San Miguel
+      Ubicacion:  https://maps.app.goo.gl/U7ByTKYjp2sDqNTq7?g_st=ic
+
+      Si prefieres autogestionarte, tambien puedes agendar en:
+        https://encuadrado.com/centro/kitradep
+    ir_a: fin
+
+  # ==========================================================================
+  # HABLAR CON HUMANO
+  # ==========================================================================
+  humano:
+    tipo: mensaje
+    mensaje: |
+      Claro, te derivo con un kinesiologo del equipo. En estos momentos
+      se encuentran atendiendo pacientes, pero en un rato te contactan
+      por este mismo chat.
+    ir_a: fin
+
+  # ==========================================================================
+  # DESPEDIDA
+  # ==========================================================================
+  despedida:
+    tipo: mensaje
+    mensaje: |
+      Gracias por escribirnos! Que tengas un excelente dia.
+    ir_a: fin
+
+# ============================================================================
+# MENSAJES GLOBALES
+# ============================================================================
+globales:
+  no_entiendo: |
+    Ups, no te entendi bien. Puedes elegir una opcion del menu escribiendo
+    el numero (o escribe "menu" para volver al inicio).
+
+  reinicio: |
+    Volvamos al inicio!
+
+  fuera_de_horario: |
+    Gracias por tu mensaje. En estos momentos no nos encontramos
+    disponibles, responderemos a la brevedad.
+
+    Te recordamos nuestros horarios: L-V 8:00-21:00 hrs / Sab 9:00-13:00 hrs.
+
+    Si necesitas agendar una cita puedes autogestionarte en:
+      https://encuadrado.com/centro/kitradep
