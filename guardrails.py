@@ -78,14 +78,18 @@ _HANDOFF = [
 ]
 
 # Temas claramente ajenos a KitraDep (lista corta, ilustrativa).
+# OJO: NO incluir deportes. KitraDep es trauma DEPORTIVO, hablar de futbol,
+# correr, gimnasio, etc. es ON-TOPIC (reintegro deportivo). Bloquear a un
+# deportista seria un falso positivo caro. La charla general la reconduce el
+# LLM con amabilidad segun el system prompt.
 _FUERA_TEMA = [
-    r"\bfutbol\b",
     r"\bpolitica\b",
     r"\bpresidente\b",
+    r"\belecciones\b",
     r"\bbitcoin\b|\bcripto\b",
     r"\breceta de cocina\b",
-    r"\bclima\b|\bel tiempo\b",
     r"\bchiste\b",
+    r"\bhoroscopo\b",
 ]
 
 # Patrones de PII (para NO logear en claro).

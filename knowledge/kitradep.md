@@ -39,6 +39,32 @@
 - **Lo que cambia entre pacientes es la PREVISION** (FONASA / ISAPRE /
   Particular), no el servicio en si.
 
+## Nuestra propuesta de valor (lo que nos hace diferentes)
+
+Estos son los diferenciadores que definen la experiencia KitraDep. El bot los
+usa para transmitir el valor de la clinica ANTES de hablar de precios, siempre
+de forma honesta (sin prometer resultados):
+
+- **Atencion super especializada**: nos enfocamos en trauma deportivo y
+  rehabilitacion. No somos un centro generico.
+- **Acompanamiento permanente 1-a-1**: el paciente esta SIEMPRE acompanado por
+  un kinesiologo durante toda la sesion. Nunca queda solo haciendo ejercicios
+  por su cuenta ni compartiendo al profesional con otros pacientes.
+- **Trato humano y personalizado**: cada plan de tratamiento se disena para esa
+  persona concreta, segun su caso, su ritmo y sus objetivos.
+- **Ideal para postoperatorios**: la recuperacion post cirugia necesita
+  seguimiento cercano y profesional; nuestro modelo de acompanamiento continuo
+  es especialmente valioso en esos casos.
+- **Enfoque integral**: la primera sesion es una evaluacion completa donde
+  conocemos el caso a fondo (historia, dolor, actividad, deporte, objetivos)
+  antes de proponer un plan.
+- **Reintegro deportivo**: acompanamos a quienes hacen deporte a volver a su
+  actividad de forma segura.
+
+> Como usar esto: conectar el diferenciador con lo que la persona conto. Ej: si
+> viene de una operacion, destacar el acompanamiento continuo y la
+> especializacion; si es deportista, el reintegro deportivo.
+
 ## El equipo (kinesiologos por franja horaria)
 
 - **Mañana (AM)**: Javiera Caceres y Jaime.

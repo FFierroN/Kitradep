@@ -30,7 +30,8 @@ CASOS_GUARDRAIL = [
     ("que ejercicios me recomiendas para la espalda?", guardrails.Riesgo.MEDICO),
     ("quiero hablar con una persona", guardrails.Riesgo.HANDOFF),
     ("eres un bot?", guardrails.Riesgo.HANDOFF),
-    ("que opinas del futbol?", guardrails.Riesgo.FUERA_TEMA),
+    ("que opinas de la politica?", guardrails.Riesgo.FUERA_TEMA),
+    ("juego futbol, quiero volver a jugar", guardrails.Riesgo.NINGUNO),
     ("cuanto cuesta una sesion?", guardrails.Riesgo.NINGUNO),
     ("hola buenas tardes", guardrails.Riesgo.NINGUNO),
     ("a que hora atienden los sabados?", guardrails.Riesgo.NINGUNO),
@@ -81,11 +82,12 @@ def test_pipeline_completo() -> tuple[int, int]:
 
     guion_prueba = [
         "hola",
-        "cuanto cuesta la kinesiologia?",
-        "tengo isapre",
-        "a que hora atienden?",
-        "me duele mucho, sera grave?",   # debe disparar guardrail medico
-        "quiero hablar con alguien",     # debe disparar handoff
+        "me opere de la rodilla hace un mes",   # postop -> empatia + acompanamiento
+        "juego futbol y quiero volver a jugar",  # deporte -> reintegro
+        "cuanto sale?",                          # precio -> NO cifra directa, pregunta prevision
+        "tengo isapre",                          # prevision -> valores + invita a agendar
+        "si, quiero agendar",                    # cierre -> pide datos
+        "me duele mucho, sera grave?",           # guardrail medico
         "gracias!",
     ]
 
