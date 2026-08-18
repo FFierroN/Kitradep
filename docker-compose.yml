@@ -1,0 +1,28 @@
+# docker-compose para el bot KitraDep
+# ----------------------------------------------------------------------------
+# Levantar:  docker compose up -d
+# Ver logs:  docker compose logs -f
+# Detener:   docker compose down
+# ----------------------------------------------------------------------------
+
+services:
+  bot:
+    build: .
+    container_name: kitradep-bot
+    restart: unless-stopped
+    ports:
+      - "8765:8765"
+    env_file:
+      - .env
+    volumes:
+      # Persistir la base de datos fuera del contenedor.
+      - kitradep_data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8765/health').status==200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  kitradep_data:

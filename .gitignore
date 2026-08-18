@@ -87,6 +87,8 @@ $RECYCLE.BIN/
 *.tmp
 temp/
 tmp/
+_server_log.txt
+_*.txt
 
 # Documentacion generada
 docs/_build/

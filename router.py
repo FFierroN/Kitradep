@@ -20,7 +20,6 @@ from pathlib import Path
 
 import guardrails
 from llm_client import LLMBackend, Turno, crear_llm
-
 BASE_DIR = Path(__file__).parent
 RUTA_PROMPT = BASE_DIR / "prompts" / "kitra.txt"
 RUTA_KNOWLEDGE = BASE_DIR / "knowledge" / "kitradep.md"
@@ -83,6 +82,20 @@ class SesionChat:
 
 
 @dataclass
+class RespuestaBot:
+    """Respuesta del router con metadata para que el caller decida acciones.
+
+    - texto: lo que se le muestra al usuario.
+    - riesgo: el veredicto de guardrails (NINGUNO si fue conversacion normal).
+    - notificar_staff: True si el caller deberia avisar al equipo (handoff/urgencia).
+    """
+
+    texto: str
+    riesgo: guardrails.Riesgo = guardrails.Riesgo.NINGUNO
+    notificar_staff: bool = False
+
+
+@dataclass
 class Router:
     """Orquesta el manejo de cada mensaje entrante."""
 
@@ -102,33 +115,43 @@ class Router:
             handoff_contacto=handoff_contacto,
         )
 
-    def manejar(self, sesion: SesionChat, mensaje: str) -> str:
-        """Procesa un mensaje del usuario y devuelve la respuesta del bot."""
+    def manejar_detallado(self, sesion: SesionChat, mensaje: str) -> RespuestaBot:
+        """Procesa un mensaje y devuelve texto + metadata de evento."""
         mensaje = mensaje.strip()
         if not mensaje:
-            return ""
+            return RespuestaBot(texto="")
 
         # 1) Guardrails: lo mas critico primero.
         veredicto = guardrails.evaluar(mensaje)
         if veredicto.riesgo is not guardrails.Riesgo.NINGUNO:
             respuesta = guardrails.respuesta_para(veredicto, self.handoff_contacto)
-            # Registramos igual en memoria para que el LLM tenga contexto luego.
             sesion.agregar("user", mensaje)
             sesion.agregar("assistant", respuesta)
-            return respuesta
+            # Urgencia y handoff ameritan avisar al staff.
+            notificar = veredicto.riesgo in {
+                guardrails.Riesgo.EMERGENCIA,
+                guardrails.Riesgo.HANDOFF,
+            }
+            return RespuestaBot(
+                texto=respuesta,
+                riesgo=veredicto.riesgo,
+                notificar_staff=notificar,
+            )
 
         # 2) TODO (siguiente iteracion): detectar intencion de agendar y saltar
         #    al flujo estricto de motor_core.ConversacionCore para recolectar
-        #    datos con control total. Por ahora, el LLM guia el agendamiento
-        #    segun las instrucciones del system prompt.
+        #    datos con control total. (Felipe revisa las ideas de conversacion.)
 
         # 3) Respuesta conversacional via LLM.
         contexto = sesion.contexto()
         respuesta = self.llm.generar(self.system_prompt, contexto, mensaje)
-
         sesion.agregar("user", mensaje)
         sesion.agregar("assistant", respuesta)
-        return respuesta
+        return RespuestaBot(texto=respuesta)
+
+    def manejar(self, sesion: SesionChat, mensaje: str) -> str:
+        """Version simple: devuelve solo el texto (compatibilidad)."""
+        return self.manejar_detallado(sesion, mensaje).texto
 
     @property
     def backend(self) -> str:

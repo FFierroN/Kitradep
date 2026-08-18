@@ -134,6 +134,51 @@ El diseno usa Dependency Inversion: todo depende de la interfaz `LLMBackend`,
 no de Gemini. Por eso el bot se desarrolla y prueba sin internet, y se cambia
 a Gemini real con solo una variable de entorno.
 
+## Webapp hibrida (produccion)
+
+Ademas de `webapp.py` (motor de estados puro), existe `webapp_hibrida.py`
+que usa el router completo con persistencia y monitoreo:
+
+```powershell
+python webapp_hibrida.py
+```
+
+Incluye:
+- Guardrails + memoria + LLM (fake o gemini)
+- Persistencia SQLite (conversaciones sobreviven reinicios)
+- Rate limiting por sesion (anti-abuso)
+- Notificaciones al staff en handoff / urgencia
+- Endpoint `/health` para monitoreo (UptimeRobot)
+
+## Modulos de infraestructura
+
+| Modulo | Rol |
+|---|---|
+| `config.py` | Configuracion centralizada (lee `.env`) |
+| `db.py` | Persistencia SQLite (sesiones, mensajes, eventos) |
+| `ratelimit.py` | Rate limiting anti-abuso |
+| `notificaciones.py` | Avisos al staff por email (SMTP) |
+| `llm_client.py` | Backends LLM intercambiables (fake/gemini) |
+| `guardrails.py` | Filtros de seguridad (medico, urgencia, PII, handoff) |
+| `router.py` | Orquestador del pipeline |
+
+## Tests
+
+```powershell
+python test_conversaciones.py   # guardrails + pipeline (20 checks)
+python test_infra.py            # db + ratelimit + config (13 checks)
+```
+
+## Despliegue en produccion
+
+Ver `DEPLOY.md` para la guia completa (VPS + Docker + Caddy/SSL + backups
++ monitoreo). Resumen:
+
+```bash
+docker compose up -d      # levanta el bot
+curl http://127.0.0.1:8765/health
+```
+
 ## Estructura del proyecto
 
 ```
