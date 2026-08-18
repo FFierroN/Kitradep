@@ -71,6 +71,69 @@ python webapp.py
 
 Se abre automaticamente en http://127.0.0.1:8765
 
+## Bot HIBRIDO con LLM (Fase 3)
+
+El bot hibrido combina guardrails de seguridad + memoria + LLM. Funciona de
+dos formas segun la variable de entorno `LLM_BACKEND`:
+
+| LLM_BACKEND | Que hace | Requiere |
+|---|---|---|
+| `fake` (default) | Respuestas simuladas, offline. Para desarrollo y tests. | Nada |
+| `gemini` | Respuestas reales con Gemini 2.0 Flash. | API key |
+
+### Probar offline (backend fake, sin internet)
+
+```powershell
+python chat_hibrido.py
+```
+
+### Probar con Gemini real (en tu PC personal)
+
+1. Consegui una API key gratis en https://aistudio.google.com/
+2. Copia `.env.example` a `.env` y pega tu key en `GEMINI_API_KEY`.
+3. Instala las deps de LLM (ya vienen en requirements.txt):
+   ```powershell
+   uv pip install google-generativeai python-dotenv
+   ```
+4. Corre con el backend gemini:
+   ```powershell
+   $env:LLM_BACKEND="gemini"; python chat_hibrido.py
+   ```
+
+### Correr los tests (offline, sin API key)
+
+```powershell
+python test_conversaciones.py
+```
+
+Valida guardrails (emergencia / medico / handoff / fuera-tema), enmascarado
+de PII, y el pipeline completo router + memoria.
+
+## Arquitectura del bot hibrido
+
+```
+Mensaje del usuario
+      |
+      v
+  router.py  -->  guardrails.py  (emergencia? medico? handoff? fuera-tema?)
+      |               |
+      |          (si hay riesgo -> respuesta segura predefinida)
+      |
+      v
+  llm_client.py  -->  FakeLLM (offline)  o  GeminiLLM (real)
+      |                        ^
+      |                LLM_BACKEND elige
+      v
+  system_prompt (prompts/kitra.txt) + base de conocimiento (knowledge/kitradep.md)
+      |
+      v
+  Respuesta natural + memoria de la conversacion
+```
+
+El diseno usa Dependency Inversion: todo depende de la interfaz `LLMBackend`,
+no de Gemini. Por eso el bot se desarrolla y prueba sin internet, y se cambia
+a Gemini real con solo una variable de entorno.
+
 ## Estructura del proyecto
 
 ```

@@ -18,6 +18,7 @@ pyyaml>=6.0.2
 reportlab>=4.2.0
 
 # --- Fase B en adelante (LLM hibrido) ---
-# Descomentar cuando arranquemos la integracion Gemini:
-# google-generativeai>=0.8.0
-# python-dotenv>=1.0.0
+# El bot corre offline con LLM_BACKEND=fake sin estos paquetes.
+# Para usar Gemini real (LLM_BACKEND=gemini) instalalos:
+google-generativeai>=0.8.0
+python-dotenv>=1.0.0
