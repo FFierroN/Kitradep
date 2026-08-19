@@ -105,8 +105,8 @@ class FakeLLM(LLMBackend):
         # Fase 1: conexion / saludo -> calido + pregunta abierta (nunca precio).
         if any(w in m for w in ("hola", "buenas", "buenos dias", "buenas tardes", "que tal")):
             return (
-                "Hola! Que bueno que nos escribas, soy Kitra de KitraDep. "
-                "Contame, en que te puedo ayudar? Que es lo que te esta pasando? "
+                "Hola! Que bueno que nos escriba, soy Kitra de KitraDep. "
+                "Cuenteme, en que le puedo ayudar? Que es lo que le esta pasando? "
                 "[simulada - FakeLLM]"
             )
 
@@ -114,33 +114,33 @@ class FakeLLM(LLMBackend):
         if any(w in m for w in ("operac", "operado", "opere", "cirugia", "postop", "post op")):
             return (
                 "Entiendo, un postoperatorio necesita un acompanamiento cercano. "
-                "Justo eso es lo nuestro: el kinesiologo te acompana *toda la sesion*, "
-                "uno a uno. Hace cuanto fue la operacion y como te sentis con el "
+                "Justo eso es lo nuestro: el kinesiologo le acompana *toda la sesion*, "
+                "uno a uno. Hace cuanto fue la operacion y como se siente con el "
                 "movimiento? [simulada - FakeLLM]"
             )
 
         # Deporte -> reintegro deportivo + descubrimiento.
         if any(w in m for w in ("deporte", "corr", "futbol", "gimnasio", "entren", "running", "crossfit")):
             return (
-                "Que bueno que hagas deporte! Trabajamos mucho el reintegro deportivo "
-                "para que vuelvas a tu actividad de forma segura. Contame que "
-                "molestia tenes y hace cuanto la arrastras? [simulada - FakeLLM]"
+                "Que bueno que haga deporte! Trabajamos mucho el reintegro deportivo "
+                "para que vuelva a su actividad de forma segura. Cuenteme que "
+                "molestia tiene y hace cuanto la arrastra? [simulada - FakeLLM]"
             )
 
         # Dolor / lesion -> empatia + descubrimiento (no diagnostica).
         if any(w in m for w in ("dolor", "duele", "lesion", "molest", "rodilla", "espalda", "hombro", "tobillo")):
             return (
-                "Uy, entiendo que debe ser incomodo. Para ayudarte mejor, contame: "
-                "hace cuanto lo tenes y te afecta en tu dia a dia o en alguna "
-                "actividad? Tenes alguna orden medica? [simulada - FakeLLM]"
+                "Uy, entiendo que debe ser incomodo. Para ayudarle mejor, cuenteme: "
+                "hace cuanto lo tiene y le afecta en su dia a dia o en alguna "
+                "actividad? Tiene alguna orden medica? [simulada - FakeLLM]"
             )
 
         # Precio -> NO tirar cifra directa: primero contexto + preguntar prevision.
         if any(w in m for w in ("precio", "cuanto", "valor", "cuesta", "sale", "cobran")):
             return (
-                "Con gusto te cuento los valores. Antes, para darte el correcto: "
-                "tene en cuenta que cada sesion es *personalizada, uno a uno* con "
-                "un kinesiologo. Con que prevision te atenderias: Fonasa, Isapre "
+                "Con gusto le cuento los valores. Antes, para darle el correcto: "
+                "tenga en cuenta que cada sesion es *personalizada, uno a uno* con "
+                "un kinesiologo. Con que prevision se atenderia: Fonasa, Isapre "
                 "o particular? [simulada - FakeLLM]"
             )
 
@@ -149,21 +149,21 @@ class FakeLLM(LLMBackend):
             return (
                 "Perfecto. Con Fonasa manejamos un *valor preferencial* (no somos "
                 "centro adherido, no trabajamos con bonos): la sesion sale $20.000, "
-                "y hay packs con descuento. Te gustaria que agendemos tu evaluacion "
+                "y hay packs con descuento. Le gustaria que agendemos su evaluacion "
                 "inicial? [simulada - FakeLLM]"
             )
         if any(w in m for w in ("isapre", "particular")):
             return (
                 "Buenisimo. El valor por sesion es $25.000, con packs de 5 y 10 con "
-                "descuento, y te damos boleta para el reembolso. Lo ideal es partir "
-                "con la evaluacion inicial. Te agendo? [simulada - FakeLLM]"
+                "descuento, y le damos boleta para el reembolso. Lo ideal es partir "
+                "con la evaluacion inicial. Le agendo? [simulada - FakeLLM]"
             )
 
         # Horarios / ubicacion (info util sin cortar la conversacion).
         if any(w in m for w in ("hora", "horario", "atienden", "abren")):
             return (
                 "Atendemos de lunes a viernes de 8 a 21h y sabados de 9 a 13h. "
-                "Preferis en la manana o en la tarde? [simulada - FakeLLM]"
+                "Prefiere en la manana o en la tarde? [simulada - FakeLLM]"
             )
         if any(w in m for w in ("donde", "direccion", "ubicacion", "llegar")):
             return (
@@ -174,18 +174,18 @@ class FakeLLM(LLMBackend):
         # Aceptacion de agendar.
         if any(w in m for w in ("si", "dale", "agenda", "agendar", "quiero", "reservar")):
             return (
-                "Genial! Para dejar todo listo necesito tu *nombre, RUT, correo, "
-                "telefono y prevision*, y si preferis manana o tarde. Un kine "
-                "confirma el horario exacto contigo. [simulada - FakeLLM]"
+                "Genial! Para dejar todo listo necesito su *nombre, RUT, correo, "
+                "telefono y prevision*, y si prefiere manana o tarde. Un kine "
+                "confirma el horario exacto con usted. [simulada - FakeLLM]"
             )
 
         if any(w in m for w in ("gracias", "genial", "perfecto")):
-            return "De nada! Aca estoy para lo que necesites. [simulada - FakeLLM]"
+            return "De nada! Aca estoy para lo que necesite. [simulada - FakeLLM]"
 
         # Fallback: reconducir con calidez hacia el descubrimiento.
         return (
-            f"Te leo: '{mensaje}'. Contame un poco mas de lo que necesitas asi "
-            "te ayudo mejor. Buscas rehabilitacion para alguna molestia o lesion? "
+            f"Le leo: '{mensaje}'. Cuenteme un poco mas de lo que necesita asi "
+            "le ayudo mejor. Busca rehabilitacion para alguna molestia o lesion? "
             "[simulada - FakeLLM]"
         )
 
@@ -257,7 +257,7 @@ class GeminiLLM(LLMBackend):
             # Fallback defensivo: nunca dejar al usuario sin respuesta.
             return (
                 "Perdon, tuve un problema tecnico momentaneo. "
-                "Podes repetir tu mensaje? Si el problema sigue, escribinos "
+                "Puede repetir su mensaje? Si el problema sigue, escribanos "
                 f"directamente. [error interno: {type(exc).__name__}]"
             )
 

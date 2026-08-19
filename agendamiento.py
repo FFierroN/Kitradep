@@ -98,11 +98,11 @@ def _validar_nombre(valor: str) -> str | None:
     limpio = valor.strip()
     if len(limpio) < 3 or " " not in limpio:
         return (
-            "Necesito tu *nombre y apellido* para dejarlo en la ficha. "
-            "Me lo pasas completo?"
+            "Necesito su *nombre y apellido* para dejarlo en la ficha. "
+            "Me lo puede pasar completo?"
         )
     if any(ch.isdigit() for ch in limpio):
-        return "Un nombre no lleva numeros. Me lo escribis de nuevo?"
+        return "Un nombre no lleva numeros. Me lo escribe de nuevo?"
     return None
 
 
@@ -114,7 +114,7 @@ def _norm_nombre(valor: str) -> str:
 def _validar_rut(valor: str) -> str | None:
     v = valor.replace(".", "").replace("-", "").strip().upper()
     if len(v) < 2 or not v[:-1].isdigit():
-        return "Ese RUT no lo entendi. Escribilo asi: *12.345.678-9*"
+        return "Ese RUT no lo entendi. Escribalo asi: *12.345.678-9*"
     cuerpo, dv = v[:-1], v[-1]
     suma, factor = 0, 2
     for d in reversed(cuerpo):
@@ -123,7 +123,7 @@ def _validar_rut(valor: str) -> str | None:
     resto = 11 - (suma % 11)
     dv_calc = {10: "K", 11: "0"}.get(resto, str(resto))
     if dv != dv_calc:
-        return "Ese RUT no me cuadra (el digito verificador). Lo revisas?"
+        return "Ese RUT no me cuadra (el digito verificador). Lo revisa?"
     return None
 
 
@@ -141,7 +141,7 @@ def _norm_rut(valor: str) -> str:
 
 def _validar_correo(valor: str) -> str | None:
     if not _EMAIL_RE.match(valor.strip()):
-        return "Ese correo no parece valido. Me lo pasas de nuevo?"
+        return "Ese correo no parece valido. Me lo pasa de nuevo?"
     return None
 
 
@@ -173,7 +173,7 @@ def _validar_prevision(valor: str) -> str | None:
     m = valor.lower()
     if any(k in m for k in _PREVISIONES):
         return None
-    return "No te entendi la prevision. Es *FONASA*, *ISAPRE* o *particular*?"
+    return "No le entendi la prevision. Es *FONASA*, *ISAPRE* o *particular*?"
 
 
 def _norm_prevision(valor: str) -> str:
@@ -190,7 +190,7 @@ def _validar_franja(valor: str) -> str | None:
         return None
     if any(k in m for k in ("tarde", "pm", "noche")):
         return None
-    return "Preferis en la *manana* o en la *tarde*?"
+    return "Prefiere en la *manana* o en la *tarde*?"
 
 
 def _norm_franja(valor: str) -> str:
@@ -221,21 +221,21 @@ CAMPOS: list[Campo] = [
     Campo(
         clave="nombre",
         etiqueta="Nombre",
-        pregunta="Genial! Para dejar tu hora, cual es tu *nombre y apellido*?",
+        pregunta="Genial! Para dejar su hora, cual es su *nombre y apellido*?",
         validar=_validar_nombre,
         normalizar=_norm_nombre,
     ),
     Campo(
         clave="rut",
         etiqueta="RUT",
-        pregunta="Perfecto. Cual es tu *RUT*? (ej: 12.345.678-9)",
+        pregunta="Perfecto. Cual es su *RUT*? (ej: 12.345.678-9)",
         validar=_validar_rut,
         normalizar=_norm_rut,
     ),
     Campo(
         clave="correo",
         etiqueta="Correo",
-        pregunta="Anotado. A que *correo* te enviamos la confirmacion?",
+        pregunta="Anotado. A que *correo* le enviamos la confirmacion?",
         validar=_validar_correo,
         normalizar=lambda s: s.strip().lower(),
     ),
@@ -249,14 +249,14 @@ CAMPOS: list[Campo] = [
     Campo(
         clave="prevision",
         etiqueta="Prevision",
-        pregunta="Con que *prevision* te atenderias: FONASA, ISAPRE o particular?",
+        pregunta="Con que *prevision* se atenderia: FONASA, ISAPRE o particular?",
         validar=_validar_prevision,
         normalizar=_norm_prevision,
     ),
     Campo(
         clave="franja",
         etiqueta="Horario",
-        pregunta="Ultima cosa: preferis en la *manana* o en la *tarde*?",
+        pregunta="Ultima cosa: prefiere en la *manana* o en la *tarde*?",
         validar=_validar_franja,
         normalizar=_norm_franja,
     ),
@@ -324,8 +324,8 @@ class Agendamiento:
             self.cancelado = True
             return PasoResultado(
                 texto=(
-                    "Sin problema, dejamos el agendamiento para cuando quieras. "
-                    "Aca estoy para lo que necesites."
+                    "Sin problema, dejamos el agendamiento para cuando quiera. "
+                    "Aca estoy para lo que necesite."
                 ),
                 cancelado=True,
             )
@@ -361,8 +361,8 @@ class Agendamiento:
     def _mensaje_cierre(self) -> str:
         nombre = self.datos.get("nombre", "").split(" ")[0] or "Listo"
         return (
-            f"Buenisimo, {nombre}! Ya deje tus datos y un kinesiologo te "
+            f"Buenisimo, {nombre}! Ya deje sus datos y un kinesiologo le "
             "confirma el horario exacto por correo o telefono. "
-            f"Si preferis, tambien podes elegir tu hora aca: {LINK_AGENDA} "
+            f"Si prefiere, tambien puede elegir su hora aca: {LINK_AGENDA} "
             "Nos vemos pronto en KitraDep."
         )

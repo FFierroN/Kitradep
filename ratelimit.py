@@ -53,6 +53,6 @@ class RateLimiter:
 
 
 MENSAJE_LIMITE = (
-    "Estas enviando mensajes muy rapido. Espera un momentito y volve a "
+    "Esta enviando mensajes muy rapido. Espere un momentito y vuelva a "
     "escribir, por favor."
 )

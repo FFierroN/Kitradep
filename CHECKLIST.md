@@ -68,7 +68,8 @@
 
 ##  DECISIONES PENDIENTES DE FELIPE
 
-- [ ] Confirmar **tuteo vs usted** (hoy quedo en tuteo)
+- [x] Confirmar **tuteo vs usted** -> USTED (formal cercano). Aplicado en
+      prompt, agendamiento, guardrails, FakeLLM y rate limit (2026-08-19).
 - [ ] Confirmar **emojis** si/no y cuantos (hoy: max 1 por mensaje)
 - [ ] Confirmar **contacto de handoff** (a quien/que numero deriva)
 - [ ] Verificar que **precios y datos** en `knowledge/kitradep.md` esten vigentes
