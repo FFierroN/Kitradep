@@ -44,9 +44,13 @@
 ##  PROXIMA SESION (prioridad alta)
 
 ### 1. Subir a GitHub  (bloquea el trabajo en 2 PCs)
-- [ ] Felipe: crear repo privado `chatbot-kitradep` en GitHub
-- [ ] Felipe: pasar la URL a Kira
-- [ ] Kira: `git remote add origin <URL>` + `git push` (viajan los 4 commits)
+- [x] Felipe: crear repo `Kitradep` en GitHub (PUBLICO): https://github.com/FFierroN/Kitradep
+- [x] Felipe: pasar la URL a Kira
+- [x] Kira: `git remote add origin` + `git push` (8 commits arriba, 2026-08-19)
+- [x] Chequeo de seguridad previo: sin secretos tracked (.env ignorado, solo .env.example con placeholders)
+- [ ] OJO: el repo es PUBLICO. Contiene datos de negocio (precios/direccion) que
+      ya son publicos en la web de KitraDep. Si algun dia se agregan datos
+      sensibles, considerar pasarlo a privado (Settings -> Danger Zone).
 
 ### 2. Probar con Gemini REAL (necesita PC personal de Felipe)
 - [ ] Felipe: en su PC, `uv pip install google-generativeai`
@@ -70,7 +74,8 @@
 
 - [x] Confirmar **tuteo vs usted** -> USTED (formal cercano). Aplicado en
       prompt, agendamiento, guardrails, FakeLLM y rate limit (2026-08-19).
-- [ ] Confirmar **emojis** si/no y cuantos (hoy: max 1 por mensaje)
+- [x] Confirmar **emojis** -> SI, con criterio (1 por mensaje, excepcional 2).
+      Aplicado en prompt (2026-08-19).
 - [ ] Confirmar **contacto de handoff** (a quien/que numero deriva)
 - [ ] Verificar que **precios y datos** en `knowledge/kitradep.md` esten vigentes
 - [ ] Revisar/afinar el **tono y las frases** de Kitra tras ver Gemini real
