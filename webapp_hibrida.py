@@ -148,6 +148,9 @@ def mensaje(texto: str = Form(...), sid: str | None = Cookie(default=None)):
             notificaciones.aviso_urgencia(sid, texto_limpio)
         elif r.riesgo is guardrails.Riesgo.HANDOFF:
             notificaciones.aviso_handoff(sid)
+        elif r.datos_agendamiento:
+            notificaciones.aviso_agendamiento(r.datos_agendamiento)
+            DB.registrar_evento("agendamiento", "paciente completo datos", sesion_id=sid)
 
     fragmento = TEMPLATES.get_template("_burbujas.html").render(
         burbujas=[

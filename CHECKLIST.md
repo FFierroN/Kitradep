@@ -19,6 +19,15 @@
 - [x] Propuesta de valor integrada (especializacion, 1-a-1, postop, deporte)
 - [x] Bugfix: deportes ya no son "fuera de tema"
 
+### Agendamiento (Joya 1 - sesion 2026-08-19)
+- [x] Recolector DETERMINISTA de datos (`agendamiento.py`), LLM-agnostico
+- [x] Deteccion de intencion de agendar (integrada en el router)
+- [x] Validacion real: RUT (modulo 11), email, telefono CL, prevision, franja
+- [x] Reintento ante dato invalido + cancelacion en cualquier momento
+- [x] Al completar: notifica al staff + link encuadrado.com
+- [x] Guardrail de urgencia aborta un agendamiento en curso (seguridad gana)
+- [x] Prompt ajustado: el LLM invita, el sistema recolecta (sin pisarse)
+
 ### Infraestructura
 - [x] Config centralizada (`config.py` lee `.env`)
 - [x] Persistencia SQLite (`db.py`)
@@ -28,7 +37,7 @@
 - [x] Deploy: Dockerfile + compose + DEPLOY.md + backup a B2
 
 ### Calidad
-- [x] Tests: 22 conversacion + 13 infraestructura = 35 checks OK
+- [x] Tests: 22 conversacion + 13 infra + 44 agendamiento = 79 checks OK
 
 ---
 
@@ -47,11 +56,13 @@
 - [ ] Moldear tono/frases segun lo que responda Gemini de verdad
 
 ### 3. Implementar Joya 1: flujo de agendamiento con function calling
-- [ ] Definir las "tools" de agendamiento (recolectar nombre/RUT/correo/fono/prevision)
-- [ ] Implementar function calling nativo de Gemini en `GeminiLLM`
-- [ ] Switching: cuando detecta intencion de agendar -> modo recoleccion de datos
-- [ ] Al completar datos -> notificar al staff + link encuadrado.com
-- [ ] Tests del flujo de agendamiento
+- [x] Definir las "tools" de agendamiento (recolectar nombre/RUT/correo/fono/prevision)
+- [x] Switching: cuando detecta intencion de agendar -> modo recoleccion de datos
+- [x] Al completar datos -> notificar al staff + link encuadrado.com
+- [x] Tests del flujo de agendamiento (44 checks)
+- [ ] PULIDO OPCIONAL (necesita PC personal): envolver el recolector con el
+      function calling NATIVO de Gemini para captura mas flexible/natural.
+      El recolector determinista ya funciona y es mas robusto (datos exactos).
 
 ---
 

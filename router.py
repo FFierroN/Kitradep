@@ -18,7 +18,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import agendamiento
 import guardrails
+from agendamiento import Agendamiento
 from llm_client import LLMBackend, Turno, crear_llm
 BASE_DIR = Path(__file__).parent
 RUTA_PROMPT = BASE_DIR / "prompts" / "kitra.txt"
@@ -64,6 +66,8 @@ class SesionChat:
     """Estado de una conversacion con un usuario."""
 
     historial: list[Turno] = field(default_factory=list)
+    # Recolector de agendamiento activo (None = conversacion normal).
+    agenda: Agendamiento | None = None
 
     def agregar(self, rol: str, texto: str) -> None:
         self.historial.append(Turno(rol=rol, texto=texto))
@@ -93,6 +97,9 @@ class RespuestaBot:
     texto: str
     riesgo: guardrails.Riesgo = guardrails.Riesgo.NINGUNO
     notificar_staff: bool = False
+    # Cuando se completa un agendamiento, trae el resumen de datos para el
+    # staff (PII real). El caller decide como notificar (email/log).
+    datos_agendamiento: str | None = None
 
 
 @dataclass
@@ -121,9 +128,11 @@ class Router:
         if not mensaje:
             return RespuestaBot(texto="")
 
-        # 1) Guardrails: lo mas critico primero.
+        # 1) Guardrails: lo mas critico primero. La seguridad SIEMPRE gana,
+        #    incluso en medio de un agendamiento (una urgencia lo aborta).
         veredicto = guardrails.evaluar(mensaje)
         if veredicto.riesgo is not guardrails.Riesgo.NINGUNO:
+            sesion.agenda = None  # cortamos cualquier recoleccion en curso
             respuesta = guardrails.respuesta_para(veredicto, self.handoff_contacto)
             sesion.agregar("user", mensaje)
             sesion.agregar("assistant", respuesta)
@@ -138,16 +147,39 @@ class Router:
                 notificar_staff=notificar,
             )
 
-        # 2) TODO (siguiente iteracion): detectar intencion de agendar y saltar
-        #    al flujo estricto de motor_core.ConversacionCore para recolectar
-        #    datos con control total. (Felipe revisa las ideas de conversacion.)
+        # 2) Agendamiento en curso: capturamos el dato de forma determinista
+        #    (sin pasar por el LLM, para que los datos sean exactos).
+        if sesion.agenda is not None and sesion.agenda.activo:
+            return self._paso_agenda(sesion, mensaje)
 
-        # 3) Respuesta conversacional via LLM.
+        # 3) Deteccion de intencion de agendar: arrancamos la recoleccion.
+        if agendamiento.detectar_intencion(mensaje):
+            sesion.agenda = Agendamiento()
+            pregunta = sesion.agenda.iniciar()
+            sesion.agregar("user", mensaje)
+            sesion.agregar("assistant", pregunta)
+            return RespuestaBot(texto=pregunta)
+
+        # 4) Respuesta conversacional via LLM.
         contexto = sesion.contexto()
         respuesta = self.llm.generar(self.system_prompt, contexto, mensaje)
         sesion.agregar("user", mensaje)
         sesion.agregar("assistant", respuesta)
         return RespuestaBot(texto=respuesta)
+
+    def _paso_agenda(self, sesion: SesionChat, mensaje: str) -> RespuestaBot:
+        """Avanza el recolector de agendamiento y arma la RespuestaBot."""
+        assert sesion.agenda is not None  # garantizado por el caller
+        paso = sesion.agenda.procesar(mensaje)
+        sesion.agregar("user", mensaje)
+        sesion.agregar("assistant", paso.texto)
+        if paso.completado or paso.cancelado:
+            sesion.agenda = None  # cerramos el flujo
+        return RespuestaBot(
+            texto=paso.texto,
+            notificar_staff=paso.completado,
+            datos_agendamiento=paso.datos_staff,
+        )
 
     def manejar(self, sesion: SesionChat, mensaje: str) -> str:
         """Version simple: devuelve solo el texto (compatibilidad)."""
