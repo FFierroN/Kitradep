@@ -57,12 +57,15 @@
 - [x] Kira: crear .env local (LLM_BACKEND=gemini, key vacia para pegar)
 - [x] Kira: script correr_local.bat (doble-click para arrancar)
 - [x] Kira: smoke-test app arranca OK en el venv (backend fake)
-- [ ] Felipe: obtener API key gratis en https://aistudio.google.com/
-- [ ] Felipe: pegar la key en .env (linea GEMINI_API_KEY=)
-- [ ] Felipe: doble-click a correr_local.bat -> probar conversacion real
-- [ ] Felipe: moldear tono/frases segun lo que responda Gemini de verdad
+- [x] Felipe: obtener API key gratis en https://aistudio.google.com/ (key formato AQ. nueva, valida)
+- [x] Felipe: pegar la key en .env (linea GEMINI_API_KEY=)
+- [x] Felipe: doble-click a correr_local.bat -> CONVERSACION REAL FUNCIONANDO (2026-08-20)
+- [x] Fix: modelo gemini-2.0-flash-exp/2.0-flash daban NotFound. Solucion:
+      GEMINI_MODEL=gemini-3.5-flash en el .env de Felipe; default del repo
+      cambiado a gemini-flash-latest. Diagnostico con check_gemini.py.
+- [ ] PROXIMA SESION: afinar la logica/tono de las respuestas de Kitra
 - [ ] NOTA: google-generativeai esta DEPRECADO. Migrar a google-genai (SDK
-      nuevo) despues de confirmar que funciona, para no quedar sobre paquete muerto.
+      nuevo) despues, para no quedar sobre paquete muerto.
 
 ### 3. Implementar Joya 1: flujo de agendamiento con function calling
 - [x] Definir las "tools" de agendamiento (recolectar nombre/RUT/correo/fono/prevision)
