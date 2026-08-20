@@ -53,11 +53,16 @@
       sensibles, considerar pasarlo a privado (Settings -> Danger Zone).
 
 ### 2. Probar con Gemini REAL (necesita PC personal de Felipe)
-- [ ] Felipe: en su PC, `uv pip install google-generativeai`
-- [ ] Felipe: crear `.env` con `LLM_BACKEND=gemini` + `GEMINI_API_KEY`
+- [x] Kira: crear .venv + instalar deps (incluye google-generativeai 0.8.6)
+- [x] Kira: crear .env local (LLM_BACKEND=gemini, key vacia para pegar)
+- [x] Kira: script correr_local.bat (doble-click para arrancar)
+- [x] Kira: smoke-test app arranca OK en el venv (backend fake)
 - [ ] Felipe: obtener API key gratis en https://aistudio.google.com/
-- [ ] Probar la conversacion real (aca se ve la magia que el FakeLLM no puede)
-- [ ] Moldear tono/frases segun lo que responda Gemini de verdad
+- [ ] Felipe: pegar la key en .env (linea GEMINI_API_KEY=)
+- [ ] Felipe: doble-click a correr_local.bat -> probar conversacion real
+- [ ] Felipe: moldear tono/frases segun lo que responda Gemini de verdad
+- [ ] NOTA: google-generativeai esta DEPRECADO. Migrar a google-genai (SDK
+      nuevo) despues de confirmar que funciona, para no quedar sobre paquete muerto.
 
 ### 3. Implementar Joya 1: flujo de agendamiento con function calling
 - [x] Definir las "tools" de agendamiento (recolectar nombre/RUT/correo/fono/prevision)
