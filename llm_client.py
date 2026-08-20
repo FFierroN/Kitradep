@@ -206,7 +206,7 @@ class GeminiLLM(LLMBackend):
     def __init__(
         self,
         api_key: str | None = None,
-        modelo: str = "gemini-2.0-flash-exp",
+        modelo: str = "gemini-2.0-flash",
         timeout_s: int = 30,
     ) -> None:
         try:
@@ -276,7 +276,7 @@ def crear_llm(base_conocimiento: str = "") -> LLMBackend:
     backend = os.getenv("LLM_BACKEND", "fake").lower().strip()
 
     if backend == "gemini":
-        modelo = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-exp")
+        modelo = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
         return GeminiLLM(modelo=modelo)
 
     if backend == "fake":
