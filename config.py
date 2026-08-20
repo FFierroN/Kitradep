@@ -81,7 +81,7 @@ class Config:
         return cls(
             llm_backend=os.getenv("LLM_BACKEND", "fake").lower().strip(),
             gemini_api_key=os.getenv("GEMINI_API_KEY", ""),
-            gemini_model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
+            gemini_model=os.getenv("GEMINI_MODEL", "gemini-flash-latest"),
             db_path=Path(os.getenv("DB_PATH", str(BASE_DIR / "data" / "kitradep.db"))),
             host=os.getenv("HOST", "127.0.0.1"),
             puerto=_int(os.getenv("PUERTO"), 8765),
