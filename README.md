@@ -8,8 +8,15 @@ criticas de agendamiento.
 **Estado actual**: Fases 1, 2 y 4-A completas (bot funcional en simulador web
 local). Fase 3 (LLM hibrido) en proceso. Fase 4 (WhatsApp real) pendiente.
 
+## Por donde empezar si retomas el proyecto
+
+> Lee **`GUIA_PARA_RETOMAR.md`** primero. Es la guia maestra: estado exacto,
+> todo lo que falta paso a paso (Fases A-G), gotchas y como seguir con otra IA.
+
 ## Documentacion
 
+- `GUIA_PARA_RETOMAR.md` -> **guia maestra para retomar y desplegar** (empeza aca)
+- `PLAN_LANZAMIENTO.md` -> plan detallado de fases hacia WhatsApp real
 - `propuesta/PROPUESTA_KITRADEP_LLM.pdf` -> propuesta tecnica completa (~40 pags)
 - `DIAGNOSTICO.md` -> diagnostico general del proyecto
 - `MOTORES.md` -> comparativa de tipos de motor (estados / keywords / LLM / hibrido)
