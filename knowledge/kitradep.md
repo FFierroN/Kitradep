@@ -16,7 +16,8 @@
 - **Como llegar**: por la salida poniente del metro San Miguel (Linea 2).
 - **Google Maps**: https://maps.app.goo.gl/U7ByTKYjp2sDqNTq7?g_st=ic
 - **Sitio web**: https://kinetraumadeportivo.com/kinesiologia-en-san-miguel/
-- **Agenda online (autogestion)**: https://encuadrado.com/centro/kitradep
+- **Agenda online (AgendaPro)**: https://kitradep.site.agendapro.com/cl/sucursal/548882
+  (es el link OFICIAL para agendar; el antiguo de encuadrado ya no se usa)
 - **Bicicletero**: si hay; consultar con el conserje y llevar candado propio.
 - **Estacionamiento**: el edificio no tiene estacionamiento propio; hay
   estacionamiento en la via publica y locomocion colectiva por Llano
@@ -32,12 +33,37 @@
 
 - **Servicio unico**: kinesiologia individual (uno a uno). Cada kinesiologo
   atiende a UN solo paciente por sesion (no hay atenciones grupales ni
-  simultaneas).
-- **Duracion de cada sesion**: 45 a 50 minutos.
+  simultaneas). La sesion es exclusiva para el paciente: no hay nadie mas en
+  la sala.
+- **Duracion de cada sesion**: 45 minutos.
 - **Primera sesion**: SIEMPRE incluye una evaluacion kinesica inicial + toma
   de historia clinica del paciente. Es la base para armar el plan.
+- **No se necesita derivacion medica** para agendar la evaluacion inicial.
 - **Lo que cambia entre pacientes es la PREVISION** (FONASA / ISAPRE /
   Particular), no el servicio en si.
+
+## La evaluacion inicial (como explicarla)
+
+Texto de referencia que usa la clinica (el bot lo resume con sus palabras,
+en mensajes cortos):
+
+> Si tienes dolor, alguna molestia o algo relacionado con tu salud fisica que
+> te preocupa, puedes agendar una evaluacion inicial con uno de nuestros
+> kinesiologos. No necesitas tener previamente una derivacion medica.
+>
+> En esta sesion nos tomaremos el tiempo para conocer tu caso, conversar sobre
+> tus sintomas y como estan afectando tu dia a dia, trabajo o actividad
+> deportiva. Luego realizaremos una evaluacion fisica para orientarte sobre los
+> pasos a seguir.
+>
+> Si podemos ayudarte desde kinesiologia, te explicaremos que encontramos y
+> plantearemos contigo los objetivos y tratamiento a seguir.
+>
+> Y si consideramos que tu caso necesita primero la evaluacion de un
+> traumatologo u otro especialista, tambien te orientaremos para que puedas
+> consultar con el profesional mas adecuado.
+>
+> La evaluacion dura aproximadamente 45 minutos.
 
 ## Nuestra propuesta de valor (lo que nos hace diferentes)
 
@@ -74,18 +100,22 @@ de forma honesta (sin prometer resultados):
 
 ### FONASA (valor preferencial)
 
-- 1 sesion: $20.000
-- Pack 5 sesiones: $100.000
-- Pack 10 sesiones: $180.000
+- 1 sesion: $20.000 (valor general $25.000)
+- Pack 5 sesiones: $100.000 (valor general $115.000)
+- Pack 10 sesiones: $180.000 (valor general $230.000)
 
 **Aclaracion legal OBLIGATORIA cuando alguien menciona FONASA:**
 KitraDep NO es un centro adherido a FONASA y NO trabaja con bonos, porque
 las atenciones son personalizadas uno a uno. Lo que se ofrece es un *valor
 preferencial* como un apoyo para que el paciente pueda acceder a
 rehabilitacion de calidad y personalizada. NO se emite bono FONASA ni se
-descuenta cotizacion.
+descuenta cotizacion. Mostrar el "valor general" al lado ayuda a que se note
+el beneficio.
 
 ### ISAPRE y Particular
+
+Se trabaja de manera particular, con sesiones 100% personalizadas (un
+paciente por kinesiologo).
 
 - 1 sesion: $25.000
 - Pack 5 sesiones: $115.000
@@ -101,21 +131,23 @@ Se entregan boletas para que el paciente realice el reembolso en su ISAPRE.
 
 ## Proceso de agendamiento
 
-1. Se pregunta el motivo de consulta.
-2. Se pregunta si tiene **orden o derivacion medica** a kinesiologia. NO es
-   obligatoria. Si la tiene, se le pide que la envie por foto por el chat.
-3. Se explica que las atenciones son personalizadas (uno a uno, 45-50 min,
-   primera sesion con evaluacion).
-4. Se pregunta la **prevision** (FONASA / ISAPRE / Particular) ANTES de
-   mostrar valores.
-5. Se muestran los valores segun prevision.
-6. Se pregunta la **franja horaria de preferencia** (AM o PM).
-7. Se recolectan los **datos del paciente**: Nombre, RUT, Correo, Contacto
-   (telefono), Prevision, Direccion.
-8. El bot NO cierra el horario exacto por si mismo: recolecta la info y un
-   kinesiologo confirma el slot disponible, o se ofrece el link de
-   autogestion (https://encuadrado.com/centro/kitradep).
-9. Al confirmar se entrega: kine asignado + ubicacion + tips.
+1. Se conversa: motivo de consulta, como le afecta, si hace deporte, si viene
+   de una cirugia, si tiene orden medica (no es obligatoria).
+2. Se explica la evaluacion inicial y la atencion personalizada (uno a uno,
+   45 min, sala exclusiva).
+3. Si pregunta valores, se pregunta la **prevision** (FONASA / ISAPRE /
+   Particular) ANTES de mostrarlos.
+4. Cuando la persona acepta agendar, se le envia el **link de AgendaPro**
+   (https://kitradep.site.agendapro.com/cl/sucursal/548882) con las
+   instrucciones: elegir el servicio, el dia y la hora, completar sus datos y
+   confirmar. (Este mensaje lo envia el sistema automaticamente.)
+5. Si la persona NO puede o NO quiere usar el link, el sistema le pide los
+   datos en un solo mensaje: Nombre, RUT, Correo, Telefono, Prevision,
+   Direccion (opcional) y preferencia de mañana o tarde. Luego un integrante
+   del equipo le confirma la hora.
+6. Cuando avisa que ya agendo: se le agradece por confiar en KitraDep y se
+   le recuerdan la ubicacion y los tips.
+7. El bot NUNCA confirma ni inventa un horario exacto por si mismo.
 
 ## Tips que se dan al confirmar una cita
 
@@ -136,8 +168,15 @@ Si, se entregan boletas para el reembolso.
 No es obligatoria. Si la tienes, mejor (nos ayuda a orientar la sesion), pero
 podemos evaluarte sin ella en la primera sesion.
 
+**¿Y si mi caso no es para kinesiologia?**
+En la evaluacion, si vemos que el caso necesita primero un traumatologo u otro
+especialista, te orientamos para que consultes con el profesional adecuado.
+
+**¿Como agendo?**
+En el link de AgendaPro: https://kitradep.site.agendapro.com/cl/sucursal/548882
+
 **¿Cuanto dura una sesion?**
-Entre 45 y 50 minutos.
+45 minutos, exclusivos para el paciente (no hay nadie mas en la sala).
 
 **¿La primera sesion es distinta?**
 Si, incluye una evaluacion kinesica completa e historia del paciente.
@@ -158,3 +197,22 @@ buena locomocion (metro San Miguel a una cuadra).
 - NO recomienda medicamentos.
 - Ante cualquier duda clinica, deriva a la evaluacion presencial.
 - Ante una urgencia, deriva a servicio de emergencia (SAMU 131).
+
+## Mensajes que inicia la clinica (NO los usa el bot por ahora)
+
+Quedan anotados para convertirlos en plantillas de WhatsApp cuando se use
+Meta Cloud API (las plantillas tienen costo por mensaje).
+
+**Solicitud de reseña en Google** (al terminar el tratamiento):
+
+> Hola 😊 Esperamos que te encuentres muy bien. Queriamos agradecerte por
+> confiar en KitraDep para tu proceso de rehabilitacion. Tu opinion es muy
+> valiosa para nosotros.
+>
+> Si pudieras dedicar un minuto para dejarnos un comentario en nuestro perfil
+> de Google, nos ayudaria muchisimo a seguir creciendo y a que mas personas
+> conozcan nuestro trabajo. Aqui puedes dejar tu opinion:
+> 👉 https://g.page/r/CVqS0PJ47EPbEAE/review
+>
+> Muchas gracias por tu tiempo y por haber elegido KitraDep. Siempre estaremos
+> disponibles si necesitas apoyo o continuidad en tu tratamiento.

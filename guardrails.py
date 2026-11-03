@@ -151,28 +151,26 @@ def respuesta_para(veredicto: Veredicto, handoff_contacto: str = "") -> str:
 
     if veredicto.riesgo is Riesgo.EMERGENCIA:
         return (
-            "Por lo que me cuenta, esto podria necesitar atencion inmediata. "
-            "Si es una urgencia, le recomiendo llamar al *131 (SAMU)* o acudir "
-            "al servicio de urgencia mas cercano. Su salud es lo primero. "
-            f"Cuando este estable, {contacto} puede ayudarle con su recuperacion."
+            "Por lo que me cuentas, esto podría necesitar atención inmediata. "
+            "Si es una urgencia, te recomiendo llamar al *131 (SAMU)* o ir al "
+            "servicio de urgencia más cercano. Tu salud es lo primero 🙏 "
+            f"Cuando estés estable, {contacto} puede ayudarte con tu recuperación."
         )
     if veredicto.riesgo is Riesgo.MEDICO:
         return (
-            "Entiendo su inquietud, pero no puedo darle un diagnostico ni "
-            "recomendaciones clinicas por chat (seria irresponsable de mi parte). "
-            "Esto es justo lo que evaluamos en la primera sesion, que incluye una "
-            f"evaluacion kinesica completa. Quiere que le agende con {contacto}?"
+            "Entiendo tu inquietud, pero no puedo darte un diagnóstico ni "
+            "recomendaciones clínicas por chat. Justamente eso lo vemos en la "
+            "*evaluación inicial*, donde un kinesiólogo revisa tu caso con calma 🙌"
         )
     if veredicto.riesgo is Riesgo.HANDOFF:
         return (
-            f"Claro, le derivo con {contacto}. Le van a escribir por este mismo "
-            "medio a la brevedad. Mientras tanto, hay algo mas en lo que le "
-            "pueda ayudar?"
+            f"¡Claro! Te dejo con {contacto}, te van a escribir por este mismo "
+            "medio a la brevedad 😊"
         )
     if veredicto.riesgo is Riesgo.FUERA_TEMA:
         return (
-            "Jaja, en eso no le puedo ayudar. Soy la asistente de KitraDep, "
-            "asi que lo mio es kinesiologia: servicios, precios, horarios y "
-            "agendar sesiones. En que de eso le ayudo?"
+            "Jaja, en eso no te puedo ayudar 😅 Soy la asistente de KitraDep, "
+            "así que lo mío es la kinesiología: servicios, valores, horarios y "
+            "agendar tu evaluación. ¿En qué de eso te ayudo?"
         )
     return ""  # NINGUNO: no hay respuesta canned, sigue el flujo normal.
