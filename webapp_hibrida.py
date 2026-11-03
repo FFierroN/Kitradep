@@ -33,6 +33,7 @@ from config import config
 from db import Database
 from ratelimit import MENSAJE_LIMITE, RateLimiter
 from router import Router, SesionChat
+from whatsapp_webhook import crear_router_webhook
 
 BASE_DIR = Path(__file__).parent
 TEMPLATES = Jinja2Templates(directory=str(BASE_DIR / "templates"))
@@ -69,7 +70,7 @@ def renderizar_texto(texto: str) -> str:
     return con_links.replace("\n", "<br>")
 
 
-def _obtener_sesion(sid: str | None) -> tuple[str, SesionChat]:
+def _obtener_sesion(sid: str | None, canal: str = "web") -> tuple[str, SesionChat]:
     """Devuelve (sid, SesionChat), rehidratando historial desde la DB."""
     if sid and sid in SESIONES:
         return sid, SESIONES[sid]
@@ -81,8 +82,56 @@ def _obtener_sesion(sid: str | None) -> tuple[str, SesionChat]:
     # Rehidratar memoria desde la DB (si la sesion ya existia).
     sesion.historial = DB.cargar_historial(sid, limite=config.max_turnos_memoria)
     SESIONES[sid] = sesion
-    DB.asegurar_sesion(sid, canal="web")
+    DB.asegurar_sesion(sid, canal=canal)
     return sid, sesion
+
+
+def procesar_mensaje(sid: str, sesion: SesionChat, texto: str) -> str:
+    """Pipeline comun a todos los canales (web, WhatsApp).
+
+    Rate limit -> router -> persistencia -> auditoria/notificaciones.
+    Devuelve el texto de respuesta del bot.
+    """
+    # Rate limiting anti-abuso.
+    if not LIMITER.permitido(sid):
+        DB.registrar_evento("rate_limit", "sesion excedio limite", sesion_id=sid)
+        return MENSAJE_LIMITE
+
+    # Procesar via router.
+    r = ROUTER.manejar_detallado(sesion, texto)
+
+    # Persistir.
+    DB.guardar_mensaje(sid, "user", texto)
+    DB.guardar_mensaje(sid, "assistant", r.texto)
+
+    # Auditoria + notificaciones segun el riesgo detectado.
+    if r.riesgo is not guardrails.Riesgo.NINGUNO:
+        DB.registrar_evento("guardrail", f"{r.riesgo.value}: {texto}", sesion_id=sid)
+    if r.notificar_staff:
+        if r.riesgo is guardrails.Riesgo.EMERGENCIA:
+            notificaciones.aviso_urgencia(sid, texto)
+        elif r.riesgo is guardrails.Riesgo.HANDOFF:
+            notificaciones.aviso_handoff(sid)
+        elif r.datos_agendamiento:
+            notificaciones.aviso_agendamiento(r.datos_agendamiento)
+            DB.registrar_evento("agendamiento", "paciente completo datos", sesion_id=sid)
+
+    return r.texto
+
+
+def procesar_whatsapp(sid: str, texto: str) -> str:
+    """Adaptador para el webhook: una sesion por numero de telefono."""
+    sid, sesion = _obtener_sesion(sid, canal="whatsapp")
+    return procesar_mensaje(sid, sesion, texto)
+
+
+app.include_router(
+    crear_router_webhook(
+        procesar=procesar_whatsapp,
+        auth_token=config.twilio_auth_token,
+        url_publica=config.webhook_url_publica,
+    )
+)
 
 
 # ============================================================================
@@ -120,42 +169,12 @@ def mensaje(texto: str = Form(...), sid: str | None = Cookie(default=None)):
     if not texto_limpio:
         return HTMLResponse("")
 
-    # Rate limiting anti-abuso.
-    if not LIMITER.permitido(sid):
-        DB.registrar_evento("rate_limit", "sesion excedio limite", sesion_id=sid)
-        fragmento = TEMPLATES.get_template("_burbujas.html").render(
-            burbujas=[
-                {"autor": "usuario", "html": renderizar_texto(texto_limpio)},
-                {"autor": "bot", "html": renderizar_texto(MENSAJE_LIMITE)},
-            ]
-        )
-        return HTMLResponse(fragmento)
-
-    # Procesar via router.
-    r = ROUTER.manejar_detallado(sesion, texto_limpio)
-
-    # Persistir.
-    DB.guardar_mensaje(sid, "user", texto_limpio)
-    DB.guardar_mensaje(sid, "assistant", r.texto)
-
-    # Auditoria + notificaciones segun el riesgo detectado.
-    if r.riesgo is not guardrails.Riesgo.NINGUNO:
-        DB.registrar_evento(
-            "guardrail", f"{r.riesgo.value}: {texto_limpio}", sesion_id=sid
-        )
-    if r.notificar_staff:
-        if r.riesgo is guardrails.Riesgo.EMERGENCIA:
-            notificaciones.aviso_urgencia(sid, texto_limpio)
-        elif r.riesgo is guardrails.Riesgo.HANDOFF:
-            notificaciones.aviso_handoff(sid)
-        elif r.datos_agendamiento:
-            notificaciones.aviso_agendamiento(r.datos_agendamiento)
-            DB.registrar_evento("agendamiento", "paciente completo datos", sesion_id=sid)
+    respuesta = procesar_mensaje(sid, sesion, texto_limpio)
 
     fragmento = TEMPLATES.get_template("_burbujas.html").render(
         burbujas=[
             {"autor": "usuario", "html": renderizar_texto(texto_limpio)},
-            {"autor": "bot", "html": renderizar_texto(r.texto)},
+            {"autor": "bot", "html": renderizar_texto(respuesta)},
         ]
     )
     resp = HTMLResponse(fragmento)

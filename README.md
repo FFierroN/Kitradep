@@ -170,12 +170,14 @@ Incluye:
 | `llm_client.py` | Backends LLM intercambiables (fake/gemini) |
 | `guardrails.py` | Filtros de seguridad (medico, urgencia, PII, handoff) |
 | `router.py` | Orquestador del pipeline |
+| `whatsapp_webhook.py` | Webhook de WhatsApp (Twilio Sandbox) |
 
 ## Tests
 
 ```powershell
 python test_conversaciones.py   # guardrails + pipeline (20 checks)
 python test_infra.py            # db + ratelimit + config (13 checks)
+python test_webhook.py          # webhook WhatsApp/Twilio (16 checks)
 ```
 
 ## Despliegue en produccion

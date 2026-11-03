@@ -76,6 +76,10 @@ class Config:
     smtp_password: str
     notif_email_to: str
 
+    # --- WhatsApp (Twilio Sandbox) ---
+    twilio_auth_token: str     # valida que los POST a /webhook vengan de Twilio
+    webhook_url_publica: str   # URL exacta registrada en Twilio
+
     @classmethod
     def cargar(cls) -> "Config":
         return cls(
@@ -95,6 +99,8 @@ class Config:
             smtp_user=os.getenv("SMTP_USER", ""),
             smtp_password=os.getenv("SMTP_PASSWORD", ""),
             notif_email_to=os.getenv("NOTIF_EMAIL_TO", ""),
+            twilio_auth_token=os.getenv("TWILIO_AUTH_TOKEN", ""),
+            webhook_url_publica=os.getenv("WEBHOOK_URL_PUBLICA", ""),
         )
 
     @property

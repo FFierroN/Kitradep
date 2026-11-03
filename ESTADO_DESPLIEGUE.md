@@ -12,9 +12,10 @@
 
 ## 1. Resumen en una linea
 
-El bot corre 24/7 en AWS con Gemini y HTTPS. Falta el webhook de WhatsApp
-(codigo) y un canal de WhatsApp habilitado: Meta exige verificar el negocio,
-asi que la demo se hara con Twilio Sandbox.
+El bot corre 24/7 en AWS con Gemini y HTTPS. El webhook de Twilio ya esta
+programado (`whatsapp_webhook.py`); falta crear la cuenta de Twilio y
+conectarla. Meta exige verificar el negocio, asi que la demo se hace con
+Twilio Sandbox.
 
 ---
 
@@ -186,6 +187,18 @@ aportar el gerente.
 - **Descartado**: Evolution API en modo Baileys (no oficial, viola los
   terminos de WhatsApp, riesgo de que bloqueen el numero de la clinica).
 
+### Webhook de Twilio (como funciona)
+- `POST /webhook` (en `whatsapp_webhook.py`) recibe lo que manda Twilio
+  (`From`, `Body`), valida la firma `X-Twilio-Signature` con el Auth Token,
+  pasa el texto al mismo pipeline del simulador y responde con TwiML (XML).
+- Una sesion por numero de telefono (`wa:+569...`): Kitra recuerda la
+  conversacion de cada paciente.
+- Fotos/audios: responde que por ahora solo lee texto.
+- Variables en el `.env` del servidor: `TWILIO_AUTH_TOKEN` y
+  `WEBHOOK_URL_PUBLICA=https://3-20-141-102.sslip.io/webhook` (debe ser
+  identica a la URL registrada en Twilio, o la firma no calza y responde 403).
+- Tests offline: `python test_webhook.py`.
+
 ### Traspaso al gerente
 Todo vive en el portafolio "Kitradep", no en el Facebook de Felipe. Para
 traspasarlo: agregar al gerente como administrador con control total del
@@ -211,9 +224,7 @@ cambiar de cuenta o de app no requiere tocar codigo.
 ## 8. Lo que falta
 
 ### Para la demo al gerente
-- [ ] **Webhook** (`whatsapp_webhook.py`): recibe mensajes, los pasa a
-      `router.py` y responde. Disenarlo para Twilio ahora y Meta despues,
-      con tests offline.
+- [x] **Webhook** (`whatsapp_webhook.py`) para Twilio, con tests offline.
 - [ ] Crear la cuenta de **Twilio**, activar el Sandbox y registrar
       `https://3-20-141-102.sslip.io/webhook`.
 - [ ] Desplegar en el servidor (`git pull` + `docker compose up -d --build`)
@@ -233,5 +244,5 @@ cambiar de cuenta o de app no requiere tocar codigo.
 ### Antes de produccion
 - [ ] Backups automaticos de la base de datos y monitoreo (UptimeRobot a `/health`).
 - [ ] Migrar `google-generativeai` (sin soporte) a `google-genai`.
-- [ ] Agregar `.dockerignore` para que el `.env` no quede copiado dentro de la imagen.
+- [x] Agregar `.dockerignore` para que el `.env` no quede copiado dentro de la imagen.
 - [ ] Pasar a un hosting pagado antes de que venza el Free plan de AWS (~mayo 2027).

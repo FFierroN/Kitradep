@@ -1,0 +1,17 @@
+# Lo que NO se copia dentro de la imagen Docker.
+# Los secretos llegan al contenedor en tiempo de ejecucion (env_file en
+# docker-compose.yml), asi que el .env nunca queda guardado en la imagen.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.git/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+data/
+*.db
+.claude/
+propuesta/
