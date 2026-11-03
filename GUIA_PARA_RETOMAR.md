@@ -9,6 +9,10 @@
 
 ---
 
+> **Actualizacion 2026-11-02:** el servidor ya esta montado (AWS + Docker +
+> HTTPS) y Meta pide verificar el negocio antes de enviar mensajes. El
+> estado real y lo que falta esta en **`ESTADO_DESPLIEGUE.md`**.
+
 ## 0. Lee esto primero (30 segundos)
 
 Kitra es un chatbot de kinesiologia para KitraDep (San Miguel, Santiago).

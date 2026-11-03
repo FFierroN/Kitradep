@@ -7,6 +7,7 @@ criticas de agendamiento.
 
 **Estado actual**: Fases 1, 2 y 4-A completas (bot funcional en simulador web
 local). Fase 3 (LLM hibrido) en proceso. Fase 4 (WhatsApp real) pendiente.
+El bot ya corre 24/7 en un servidor AWS con HTTPS; ver `ESTADO_DESPLIEGUE.md`.
 
 ## Por donde empezar si retomas el proyecto
 
@@ -16,6 +17,7 @@ local). Fase 3 (LLM hibrido) en proceso. Fase 4 (WhatsApp real) pendiente.
 ## Documentacion
 
 - `GUIA_PARA_RETOMAR.md` -> **guia maestra para retomar y desplegar** (empeza aca)
+- `ESTADO_DESPLIEGUE.md` -> **estado real del servidor (AWS), Meta/WhatsApp y lo que falta**
 - `PLAN_LANZAMIENTO.md` -> plan detallado de fases hacia WhatsApp real
 - `propuesta/PROPUESTA_KITRADEP_LLM.pdf` -> propuesta tecnica completa (~40 pags)
 - `DIAGNOSTICO.md` -> diagnostico general del proyecto
