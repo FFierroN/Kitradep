@@ -192,7 +192,7 @@ class GeminiLLM(LLMBackend):
         self,
         api_key: str | None = None,
         modelo: str = "gemini-flash-latest",
-        timeout_s: int = 30,
+        timeout_s: int = 12,
     ) -> None:
         try:
             import google.generativeai as genai  # noqa: WPS433 (lazy import a proposito)
@@ -212,7 +212,10 @@ class GeminiLLM(LLMBackend):
 
         genai.configure(api_key=key)
         self._genai = genai
-        self._modelo = modelo
+        # Se aceptan varios modelos separados por coma: si el primero falla
+        # o tarda demasiado, se prueba el siguiente (y cada uno tiene su
+        # propia cuota gratis diaria).
+        self._modelos = [m.strip() for m in modelo.split(",") if m.strip()]
         self._timeout_s = timeout_s
 
     def generar(
@@ -228,23 +231,27 @@ class GeminiLLM(LLMBackend):
             contents.append({"role": rol, "parts": [t.texto]})
         contents.append({"role": "user", "parts": [mensaje]})
 
-        model = self._genai.GenerativeModel(
-            model_name=self._modelo,
-            system_instruction=system_prompt,
+        for nombre_modelo in self._modelos:
+            model = self._genai.GenerativeModel(
+                model_name=nombre_modelo,
+                system_instruction=system_prompt,
+            )
+            try:
+                resp = model.generate_content(
+                    contents,
+                    request_options={"timeout": self._timeout_s},
+                )
+                texto = (resp.text or "").strip()
+                if texto:
+                    return texto
+            except Exception as exc:  # pragma: no cover - depende de red
+                print(f"[GeminiLLM] {nombre_modelo} fallo: {type(exc).__name__}: {str(exc)[:120]}")
+
+        # Fallback defensivo: nunca dejar al usuario sin respuesta.
+        return (
+            "Perdón, tuve un problema técnico momentáneo 🙏 "
+            "¿Me repites tu mensaje?"
         )
-        try:
-            resp = model.generate_content(
-                contents,
-                request_options={"timeout": self._timeout_s},
-            )
-            return (resp.text or "").strip()
-        except Exception as exc:  # pragma: no cover - depende de red
-            # Fallback defensivo: nunca dejar al usuario sin respuesta.
-            print(f"[GeminiLLM] error: {type(exc).__name__}: {exc}")
-            return (
-                "Perdón, tuve un problema técnico momentáneo 🙏 "
-                "¿Me repites tu mensaje?"
-            )
 
 
 # ============================================================================

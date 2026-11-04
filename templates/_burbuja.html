@@ -1,14 +1,20 @@
-{# Renderiza UNA burbuja. Espera variable `m` con {autor, html}. #}
-{% if m.autor == "bot" %}
-  <div class="flex justify-start">
-    <div class="relative bubble bubble-bot bg-white text-gray-800 rounded-lg rounded-tl-none px-3 py-2 max-w-[80%] shadow text-sm leading-snug whitespace-pre-line">
-      {{ m.html | safe }}
+{# Renderiza UNA burbuja. Espera variable `m` con {autor, html}.
+   autor: "bot" / "assistant" (Kitra) o "usuario" / "user" (paciente). #}
+{% if m.autor in ("bot", "assistant") %}
+  <div class="fila fila-bot">
+    <div class="burbuja burbuja-bot">
+      <span class="texto">{{ m.html | safe }}</span>
+      <span class="meta"><span class="hora"></span></span>
     </div>
   </div>
 {% else %}
-  <div class="flex justify-end">
-    <div class="relative bubble bubble-user bg-[#d9fdd3] text-gray-800 rounded-lg rounded-tr-none px-3 py-2 max-w-[80%] shadow text-sm leading-snug whitespace-pre-line">
-      {{ m.html | safe }}
+  <div class="fila fila-user">
+    <div class="burbuja burbuja-user">
+      <span class="texto">{{ m.html | safe }}</span>
+      <span class="meta">
+        <span class="hora"></span>
+        <svg class="checks" viewBox="0 0 16 11" aria-label="Leído"><path fill="currentColor" d="M11.07.65 4.95 6.77 2.31 4.13.9 5.54l4.05 4.05L12.48 2.06zM15.1.65 8.98 6.77l-.7-.7-1.41 1.41 2.11 2.11L16.51 2.06z"/></svg>
+      </span>
     </div>
   </div>
 {% endif %}
