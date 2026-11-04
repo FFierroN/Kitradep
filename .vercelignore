@@ -1,0 +1,15 @@
+# Lo que NO se sube a Vercel (achica el despliegue).
+.venv/
+venv/
+__pycache__/
+data/
+*.db
+.env
+.env.*
+!.env.example
+*.pem
+propuesta/
+flujo/*.docx
+scripts/
+.claude/
+test_*.py

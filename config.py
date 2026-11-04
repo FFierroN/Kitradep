@@ -37,6 +37,13 @@ def _bool(valor: str | None, default: bool = False) -> bool:
     return valor.strip().lower() in {"1", "true", "yes", "si", "on"}
 
 
+def _db_por_defecto() -> str:
+    # En Vercel solo se puede escribir en /tmp (el resto es solo lectura).
+    if os.getenv("VERCEL"):
+        return "/tmp/kitradep.db"
+    return str(BASE_DIR / "data" / "kitradep.db")
+
+
 def _int(valor: str | None, default: int) -> int:
     try:
         return int(valor) if valor is not None else default
@@ -80,13 +87,16 @@ class Config:
     twilio_auth_token: str     # valida que los POST a /webhook vengan de Twilio
     webhook_url_publica: str   # URL exacta registrada en Twilio
 
+    # --- Simulador publico (Vercel) ---
+    simulador_clave: str       # vacio = sin clave (PC / servidor AWS)
+
     @classmethod
     def cargar(cls) -> "Config":
         return cls(
             llm_backend=os.getenv("LLM_BACKEND", "fake").lower().strip(),
             gemini_api_key=os.getenv("GEMINI_API_KEY", ""),
             gemini_model=os.getenv("GEMINI_MODEL", "gemini-flash-latest"),
-            db_path=Path(os.getenv("DB_PATH", str(BASE_DIR / "data" / "kitradep.db"))),
+            db_path=Path(os.getenv("DB_PATH", _db_por_defecto())),
             host=os.getenv("HOST", "127.0.0.1"),
             puerto=_int(os.getenv("PUERTO"), 8765),
             abrir_navegador=_bool(os.getenv("ABRIR_NAVEGADOR"), True),
@@ -101,6 +111,7 @@ class Config:
             notif_email_to=os.getenv("NOTIF_EMAIL_TO", ""),
             twilio_auth_token=os.getenv("TWILIO_AUTH_TOKEN", ""),
             webhook_url_publica=os.getenv("WEBHOOK_URL_PUBLICA", ""),
+            simulador_clave=os.getenv("SIMULADOR_CLAVE", ""),
         )
 
     @property

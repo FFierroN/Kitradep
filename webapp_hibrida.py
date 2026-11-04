@@ -16,6 +16,8 @@ Uso:
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 import re
 import uuid
 import webbrowser
@@ -23,8 +25,8 @@ from html import escape
 from pathlib import Path
 
 import uvicorn
-from fastapi import Cookie, FastAPI, Form
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import Cookie, FastAPI, Form, Request
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 import guardrails
@@ -50,6 +52,55 @@ LIMITER = RateLimiter(
 
 # Memoria en RAM por sesion (se rehidrata desde la DB al reconectar).
 SESIONES: dict[str, SesionChat] = {}
+
+
+# ============================================================================
+# Clave de acceso (solo si SIMULADOR_CLAVE esta configurada, ej: en Vercel)
+# ============================================================================
+
+PAGINA_CLAVE = """<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KitraDep - Acceso</title><style>
+body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:-apple-system,Segoe UI,Roboto,sans-serif;
+background:linear-gradient(160deg,#0f1c1a,#13211f 50%,#0b1413);color:#e9f5f2}
+form{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);padding:32px;border-radius:20px;width:300px;text-align:center}
+.logo{width:52px;height:52px;border-radius:14px;margin:0 auto 14px;display:grid;place-items:center;font-weight:700;font-size:22px;
+background:linear-gradient(135deg,#25d366,#128c7e)}
+h1{font-size:20px;margin:0 0 6px}p{font-size:13px;color:#9fc2bb;margin:0 0 18px}
+input{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.2);
+background:rgba(0,0,0,.25);color:#fff;font-size:15px;outline:none}
+button{margin-top:12px;width:100%;padding:12px;border:none;border-radius:12px;background:#25d366;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+.error{color:#ff8a80;font-size:13px;margin-top:10px}</style></head><body>
+<form method="get"><div class="logo">K</div><h1>Simulador de Kitra</h1>
+<p>Ingresa la clave que te compartió el equipo de KitraDep.</p>
+<input name="clave" type="password" placeholder="Clave de acceso" autofocus required>
+<button type="submit">Entrar</button>__ERROR__</form></body></html>"""
+
+
+def _firma_acceso(clave: str) -> str:
+    """Valor de la cookie: un hash, para no guardar la clave tal cual."""
+    return hashlib.sha256(f"kitradep:{clave}".encode()).hexdigest()
+
+
+@app.middleware("http")
+async def exigir_clave(request: Request, call_next):
+    clave = config.simulador_clave
+    if not clave or request.url.path == "/health":
+        return await call_next(request)
+
+    esperada = _firma_acceso(clave)
+    if hmac.compare_digest(request.cookies.get("acceso", ""), esperada):
+        return await call_next(request)
+
+    intento = request.query_params.get("clave")
+    if intento is not None and hmac.compare_digest(intento, clave):
+        resp = RedirectResponse(request.url.path, status_code=303)
+        resp.set_cookie("acceso", esperada, max_age=60 * 60 * 24 * 30,
+                        httponly=True, samesite="lax")
+        return resp
+
+    error = '<div class="error">Clave incorrecta</div>' if intento is not None else ""
+    return HTMLResponse(PAGINA_CLAVE.replace("__ERROR__", error), status_code=401)
 
 
 # ============================================================================
